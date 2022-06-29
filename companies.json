@@ -1,0 +1,14 @@
+{
+  "all": [
+    {
+      "tickertag": "bajaj-finance-BJFN",
+      "symbol": "BAJFINANCE",
+      "name": "Bajaj Finance Ltd"
+    }, 
+    {
+      "tickertag": "hdfc-bank-HDBK",
+      "symbol": "HDFCBANK",
+      "name": "HDFC Bank Ltd"
+    }
+  ]
+}
