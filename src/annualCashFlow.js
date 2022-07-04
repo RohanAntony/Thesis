@@ -8,7 +8,7 @@ const fetchData = async (tickertag, symbol, name) => {
     }
   });
   const page = await browser.newPage();
-  const url = `https://www.tickertape.in/stocks/${tickertag}/financials?checklist=basic&period=annual&statement=income&view=normal`
+  const url = `https://www.tickertape.in/stocks/${tickertag}/financials?checklist=basic&period=annual&statement=cashflow`
   await page.goto(url, {
     waitUntil: 'networkidle2',
   });
@@ -22,22 +22,13 @@ const fetchData = async (tickertag, symbol, name) => {
 
   const rowClasses = [
     { class: ".period-text span", name: 'period'},
-    { class: "td[data-row='incTrev'] .value-cell-content", name: 'totalRevenue'},
-    { class: "td[data-row='incRaw'] .value-cell-content", name: 'rawMaterials'},
-    { class: "td[data-row='incPfc'] .value-cell-content", name: 'powerAndFuelCost'},
-    { class: "td[data-row='incEpc'] .value-cell-content", name: 'employeeCost'},
-    { class: "td[data-row='incSga'] .value-cell-content", name: 'salesAndAdminExpenses'},
-    { class: "td[data-row='incOpe'] .value-cell-content", name: 'operationsAndOtherExpenses'},
-    { class: "td[data-row='incEbi'] .value-cell-content", name: 'ebitda'},
-    { class: "td[data-row='incDep'] .value-cell-content", name: 'depreciationAndAmortization'},
-    { class: "td[data-row='incPbi'] .value-cell-content", name: 'pbit'},
-    { class: "td[data-row='incIoi'] .value-cell-content", name: 'interestAndOtherItems'},
-    { class: "td[data-row='incPbt'] .value-cell-content", name: 'pbt'},
-    { class: "td[data-row='incToi'] .value-cell-content", name: 'taxesAndOtherItems'},
-    { class: "td[data-row='incNinc'] .value-cell-content", name: 'netIncome'},
-    { class: "td[data-row='incEps'] .value-cell-content", name: 'eps'},
-    { class: "td[data-row='incDps'] .value-cell-content", name: 'dps'},
-    { class: "td[data-row='incPyr'] .value-cell-content", name: 'payoutRatio'},
+    { class: "td[data-row='cafCfoa'] .value-cell-content", name: 'cashFromOperatingActivities'},
+    { class: "td[data-row='cafCfia'] .value-cell-content", name: 'cashFromInvestingActivities'},
+    { class: "td[data-row='cafCffa'] .value-cell-content", name: 'cashFromFinancingActivities'},
+    { class: "td[data-row='cafNcic'] .value-cell-content", name: 'netChangeInCash'},
+    { class: "td[data-row='cafCiwc'] .value-cell-content", name: 'changesInWorkingCapital'},
+    { class: "td[data-row='cafCexp'] .value-cell-content", name: 'capitalExpenditures'},
+    { class: "td[data-row='cafFcf'] .value-cell-content", name: 'freeCashFlow'},
   ];
 
   const rowBasedData = {};
@@ -55,7 +46,7 @@ const fetchData = async (tickertag, symbol, name) => {
     const singlePeriodData = {
       symbol,
       name,
-      type: 'AnnualIncome'
+      type: 'AnnualCashFlow'
     };
     for(const rowClass of rowClasses) {
       singlePeriodData[rowClass.name] = rowBasedData[rowClass.name][index];
@@ -65,7 +56,7 @@ const fetchData = async (tickertag, symbol, name) => {
 
   console.log(periodData);
 
-  const screenshotPath = `./images/annualIncome/${symbol}.png`
+  const screenshotPath = `./images/annualCashFlow/${symbol}.png`
   await page.screenshot({ path: screenshotPath, fullPage: true });
 
   await browser.close();

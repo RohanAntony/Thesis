@@ -69,7 +69,7 @@ const fetchData = async (tickertag, symbol, name) => {
     const singlePeriodData = {
       symbol,
       name,
-      type: 'AnnualIncome'
+      type: 'AnnualBalanceSheet'
     };
     for(const rowClass of rowClasses) {
       singlePeriodData[rowClass.name] = rowBasedData[rowClass.name][index];
@@ -79,7 +79,7 @@ const fetchData = async (tickertag, symbol, name) => {
 
   console.log(periodData);
 
-  const screenshotPath = `../images/annualBalanceSheet/${symbol}.png`
+  const screenshotPath = `./images/annualBalanceSheet/${symbol}.png`
   await page.screenshot({ path: screenshotPath, fullPage: true });
 
   await browser.close();

@@ -66,7 +66,7 @@ const fetchData = async (tickertag, symbol, name) => {
 
   console.log(periodData);
 
-  const screenshotPath = `../images/quarterIncome/${symbol}.png`
+  const screenshotPath = `./images/quarterIncome/${symbol}.png`
   await page.screenshot({ path: screenshotPath, fullPage: true });
 
   await browser.close();
