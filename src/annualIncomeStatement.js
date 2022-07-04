@@ -65,14 +65,14 @@ const fetchData = async (tickertag, symbol, name) => {
 
   console.log(periodData);
 
-  const screenshotPath = `./images/annualIncome/${symbol}.png`
+  const screenshotPath = `../images/annualIncome/${symbol}.png`
   await page.screenshot({ path: screenshotPath, fullPage: true });
 
   await browser.close();
 };
 
 (async () => {
-  const companiesList = require('./companies.json');
+  const companiesList = require('../companies.json');
   for(const company of companiesList.all) {
     await fetchData(company.tickertag, company.symbol, company.name);
   }
