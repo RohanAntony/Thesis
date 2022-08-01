@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SideNavType } from 'src/types/SideNav';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,11 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'frontend';
+  tabList = [SideNavType.DASHBOARD, SideNavType.SETUP, SideNavType.LOGS];
+  selected : SideNavType = SideNavType.DASHBOARD;
+
+  public selectTab(tab: SideNavType) {
+    this.selected = tab;
+  }
+
 }
