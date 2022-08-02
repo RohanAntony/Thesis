@@ -1,17 +1,23 @@
-<div>
-  <mat-toolbar color="primary" class="navbar">
-    <div>Icarus</div>
+<div class="root-div">
+  <mat-toolbar color="primary">
+    <span>Icarus</span>
   </mat-toolbar>
-  <mat-drawer-container class="sidenav">
-    <mat-drawer mode="side" opened class="sidenav-list">
-      <mat-action-list>
-        <button mat-list-item *ngFor="let tab of tabList" color="accent" (click)="selectTab(tab)">
-          {{ tab }}
-        </button>
-      </mat-action-list>
+  <mat-drawer-container class="drawer">
+    <mat-drawer mode="side" opened class="drawer-nav">
+      <mat-nav-list>
+        <a mat-list-item
+          *ngFor="let tab of tabList"
+          [routerLink]="[tab.name]"
+          (click)="selectTab(tab.name)"
+          href="#"
+          [ngClass]="selected == tab.name ? 'primary' : ''">
+          <mat-icon aria-hidden="false">{{ tab.icon }}</mat-icon>
+          {{ tab.name }}
+      </a>
+      </mat-nav-list>
     </mat-drawer>
-    <mat-drawer-content class="sidenav-content">
-      {{ selected }}
+    <mat-drawer-content class="drawer-content">
+      <router-outlet></router-outlet>
     </mat-drawer-content>
   </mat-drawer-container>
 </div>

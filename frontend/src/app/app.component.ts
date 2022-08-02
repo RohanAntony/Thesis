@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SideNavType } from 'src/types/SideNav';
+import { NavButton, NavType } from './types/Navigation';
 
 @Component({
   selector: 'app-root',
@@ -7,12 +7,15 @@ import { SideNavType } from 'src/types/SideNav';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'frontend';
-  tabList = [SideNavType.DASHBOARD, SideNavType.SETUP, SideNavType.LOGS];
-  selected : SideNavType = SideNavType.DASHBOARD;
+  title = 'Icarus';
+  tabList: NavButton[] = [
+    { name: NavType.DASHBOARD, icon: 'dashboard' },
+    { name: NavType.SETTINGS, icon: 'settings' },
+    { name: NavType.LOGS, icon: 'calendar_view_day' }
+  ];
+  selected: NavType = NavType.SETTINGS;
 
-  public selectTab(tab: SideNavType) {
+  public selectTab(tab: NavType) {
     this.selected = tab;
   }
-
 }

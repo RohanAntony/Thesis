@@ -1,18 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DashboardComponent } from '../dashboard/dashboard.component';
+import { LoggingComponent } from '../logging/logging.component';
 import { MaterialModule } from '../material/material.module';
+
+
 
 @NgModule({
   declarations: [
-    DashboardComponent
+    LoggingComponent
   ],
   imports: [
     CommonModule,
     MaterialModule
   ],
   exports: [
-    DashboardComponent
+    LoggingComponent
   ]
 })
-export class DashboardModule { }
+export class LoggingModule { }

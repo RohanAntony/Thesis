@@ -1,16 +1,23 @@
-.navbar {
-  justify-content: space-between;
+.root-div {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-.sidenav {
-  height: auto;
-  min-height: 800px;
+.drawer {
+  flex-grow: 1;
 }
 
-.sidenav-list {
+.drawer-nav {
   min-width: 200px;
+  border-right: none;
 }
 
-span {
-  padding-right: 1rem;
+.drawer-content {
+  padding-left: 20px;
+}
+
+.primary {
+  color: rgb(63, 81, 181);
+  background-color:  rgba(63, 81, 181, 0.1);
 }
