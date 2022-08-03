@@ -8,6 +8,7 @@ import { MaterialModule } from './material/material.module';
 import { SettingsModule } from './settings/settings.module';
 import { LoggingModule } from './logging/logging.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
     MaterialModule,
     SettingsModule,
     LoggingModule,
-    DashboardModule
+    DashboardModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
