@@ -1,13 +1,9 @@
 {
   "name": "scheduler",
   "version": "1.0.0",
-  "description": "",
-  "main": "scheduler.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./scheduler.js"
-  },
-  "author": "",
+  "description": "Schedules different operation within the architecture for execution",
+  "main": "index.js",
+  "author": "Rohan Antony",
   "license": "ISC",
   "dependencies": {
     "redis": "^4.2.0"

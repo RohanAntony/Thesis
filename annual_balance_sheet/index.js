@@ -26,9 +26,6 @@ const fetchData = async (tickertag, symbol, name) => {
     content: '#__next > .ttactions-root { position: inherit }'
   })
 
-  // const buttons = await page.$x("//*[contains(text(),'See Costs')]");
-  // await buttons[0].click();
-
   const rowClasses = [
     { class: ".period-text span", name: 'period'},
     { class: "tr[data-row='balCsti'] .value-cell-content", name: 'cashAndShortTermInvestments'},
@@ -86,54 +83,33 @@ const fetchData = async (tickertag, symbol, name) => {
     periodData.push(singlePeriodData);
   }
 
-  console.log(periodData);
-
-  // const screenshotPath = `./images/annualBalanceSheet/${symbol}.png`
-  // await page.screenshot({ path: screenshotPath, fullPage: true });
-
   await browser.close();
+
+  return periodData;
 };
-
-// (async () => {
-//   const companiesList = require('../../companies.json');
-//   for(const company of companiesList.all) {
-//     await fetchData(company.tickertag, company.symbol, company.name);
-//   }
-// })();
-
-// Log if redis client error occurs
-// client.on('error', (err) => console.log('Redis Client Error', err));
 
 (async () => {
 
-  // const publisher = await redis.createClient({ socket: { host: "redis" } });;
-  // await publisher.connect();
-  // const subscriber = await redis.createClient({ socket: { host: "redis" } });;
-  // await subscriber.connect();
+  const publisher = await redis.createClient({ socket: { host: "redis" } });;
+  await publisher.connect();
+  const subscriber = await redis.createClient({ socket: { host: "redis" } });;
+  await subscriber.connect();
 
-  // const INSTRUCTION_CHANNEL = 'Instructions';
-  // const DATA_CHANNEL = 'Data';
+  const ANNUAL_BALANCE_SHEET = {
+    INSTRUCTION_CHANNEL: 'instruction_annual_balance_sheet',
+    DATA_CHANNEL: 'data_annual_balance_sheet',
+    HEARTBEAT_CHANNEL: 'heatbeat_annual_balance_sheet'
+  }
 
-  // const INSTRUCTION_SET = {
-  //   FETCH_ANNUAL_BALANCE_SHEET: 'fetchAnnualBalanceSheet',
-  //   FETCH_ANNUAL_CASH_FLOW: 'fetchAnnualCashFlow',
-  //   FETCH_ANNUAL_INCOME_STATEMENT: 'fetchAnnualIncomeStatement',
-  //   // FETCH_QUARTER_INCOME_STATEMENT: 'fetchQuarterIncomeStatement'
-  // }
+  await subscriber.subscribe(ANNUAL_BALANCE_SHEET.INSTRUCTION_CHANNEL, async (message) => {
+    const data = JSON.parse(message);
+    const responseData = await fetchData(data.tag, data.symbol, data.name);
+    responseData.forEach(res => {
+      publisher.publish(ANNUAL_BALANCE_SHEET.DATA_CHANNEL, JSON.stringify(res));
+    });
+  });
 
-  // await subscriber.subscribe(INSTRUCTION_CHANNEL, async (message) => {
-  //   // if(message.instruction == FETCH_ANNUAL_BALANCE_SHEET) {
-  //     // Fetch based on message.data
-  //   console.log(message);
-  //     // Publish result back to DATA_CHANNEL
-  //   //   publisher.publish(DATA_CHANNEL, 'Testing');
-  //   // };
-  //   await fetchData("bajaj-finance-BJFN", "BAJFINANCE", "Bajaj Finance Ltd");
-  // });
-
-  await fetchData("bajaj-finance-BJFN", "BAJFINANCE", "Bajaj Finance Ltd");
+  setInterval(() => {
+    publisher.publish(ANNUAL_BALANCE_SHEET.HEARTBEAT_CHANNEL, (new Date()).toISOString());
+  }, 10000);
 })();
-
-setInterval(() => {
-  console.log('Running annual balance sheet process');
-}, 10000);

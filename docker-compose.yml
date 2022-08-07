@@ -12,6 +12,14 @@ services:
     image: rantony/annual_balance_sheet
     depends_on:
       - redis
+  annual_cash_flow:
+    image: rantony/annual_cash_flow
+    depends_on:
+      - redis
+  annual_income_statement:
+    image: rantony/annual_income_statement
+    depends_on:
+      - redis
   # db:
   #   image: mongo:4.2
   #   restart: always

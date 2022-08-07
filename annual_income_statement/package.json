@@ -1,7 +1,7 @@
 {
-  "name": "annual_balance_sheet",
+  "name": "annual_income_statement",
   "version": "1.0.0",
-  "description": "Fetch annual balance sheet data from tickertape website for a given company",
+  "description": "Fetch annual income statement data from tickertape website for a given company",
   "main": "index.js",
   "author": "Rohan Antony",
   "license": "ISC",

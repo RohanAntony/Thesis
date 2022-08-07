@@ -3,5 +3,5 @@ RUN mkdir /home/node/app
 WORKDIR /home/node/app
 COPY package.json ./
 RUN npm install
-COPY scheduler.js ./
-CMD ["node", "./scheduler.js"]
+COPY index.js ./
+CMD ["node", "./index.js"]
