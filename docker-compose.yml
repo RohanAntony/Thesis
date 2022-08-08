@@ -1,9 +1,21 @@
 version: '3.1'
 services:
+  db:
+    image: mongo:4.2
+    restart: always
+    volumes:
+      - ./data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
   redis:
     image: redis:alpine
     ports:
       - "6379:6379"
+  backend:
+    image: rantony/backend
+  frontend:
+    image: rantony/frontend
   scheduler:
     image: rantony/scheduler
     depends_on:
@@ -20,9 +32,3 @@ services:
     image: rantony/annual_income_statement
     depends_on:
       - redis
-  # db:
-  #   image: mongo:4.2
-  #   restart: always
-  #   environment:
-  #     MONGO_INITDB_ROOT_USERNAME: root
-  #     MONGO_INITDB_ROOT_PASSWORD: example
