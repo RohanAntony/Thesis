@@ -1,6 +1,8 @@
 const puppeteer = require('puppeteer');
 const redis = require('redis');
 
+const config = require('./config.json');
+
 const fetchData = async (tickertag, symbol, name) => {
   const browser = await puppeteer.launch({
     defaultViewport: {
@@ -52,7 +54,7 @@ const fetchData = async (tickertag, symbol, name) => {
     const singlePeriodData = {
       symbol,
       name,
-      type: 'AnnualCashFlow'
+      type: config.DOCUMENT.ACF
     };
     for(const rowClass of rowClasses) {
       singlePeriodData[rowClass.name] = rowBasedData[rowClass.name][index];
@@ -67,26 +69,20 @@ const fetchData = async (tickertag, symbol, name) => {
 
 (async () => {
 
-  const publisher = await redis.createClient({ socket: { host: "redis" } });;
+  const publisher = await redis.createClient({ socket: { host: config.REDIS.HOSTNAME } });;
   await publisher.connect();
-  const subscriber = await redis.createClient({ socket: { host: "redis" } });;
+  const subscriber = await redis.createClient({ socket: { host: config.REDIS.HOSTNAME } });;
   await subscriber.connect();
 
-  const ANNUAL_CASH_FLOW = {
-    INSTRUCTION_CHANNEL: 'instruction_annual_cash_flow',
-    DATA_CHANNEL: 'data_annual_cash_flow',
-    HEARTBEAT_CHANNEL: 'heartbeat_annual_cash_flow',
-  }
-
-  await subscriber.subscribe(ANNUAL_CASH_FLOW.INSTRUCTION_CHANNEL, async (message) => {
+  await subscriber.subscribe(config.REDIS.ACF_CHANNEL.INSTRUCTION, async (message) => {
     const data = JSON.parse(message);
     const responseData = await fetchData(data.tag, data.symbol, data.name);
     responseData.forEach(res => {
-      publisher.publish(ANNUAL_CASH_FLOW.DATA_CHANNEL, JSON.stringify(res));
+      publisher.publish(config.REDIS.ACF_CHANNEL.DATA, JSON.stringify(res));
     });
   });
 
   setInterval(() => {
-    publisher.publish(ANNUAL_CASH_FLOW.HEARTBEAT_CHANNEL, (new Date()).toISOString());
+    publisher.publish(config.REDIS.ACF_CHANNEL.HEARTBEAT, (new Date()).toISOString());
   }, 10000);
 })();

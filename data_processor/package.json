@@ -1,7 +1,7 @@
 {
-  "name": "scheduler",
+  "name": "data_processor",
   "version": "1.0.0",
-  "description": "Schedules different operation within the architecture for execution",
+  "description": "Integrates the extracted data into a common document for storage and analysis",
   "main": "index.js",
   "author": "Rohan Antony",
   "license": "ISC",

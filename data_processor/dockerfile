@@ -1,7 +1,8 @@
 FROM node:alpine
 RUN mkdir /home/node/app
 WORKDIR /home/node/app
-COPY package.json ./
+COPY ./data_processor/package.json ./
 RUN npm install
-COPY index.js ./
+COPY ./data_processor/index.js ./
+COPY ./config.json ./
 CMD ["node", "./index.js"]

@@ -1,0 +1,25 @@
+{
+  "REDIS": {
+    "HOSTNAME": "redis",
+    "ABS_CHANNEL": {
+      "INSTRUCTION": "instruction_abs",
+      "DATA": "data_abs",
+      "HEARTBEAT": "heatbeat_abs"
+    },
+    "ACF_CHANNEL": {
+      "INSTRUCTION": "instruction_acf",
+      "DATA": "data_acf",
+      "HEARTBEAT": "heatbeat_acf"
+    },
+    "AIS_CHANNEL": {
+      "INSTRUCTION": "instruction_ais",
+      "DATA": "data_ais",
+      "HEARTBEAT": "heatbeat_ais"
+    }
+  },
+  "DOCUMENT": {
+    "ABS": "Annual Balance Sheet",
+    "ACF": "Annual Cash Flow",
+    "AIS": "Annual Income Statement"
+  }
+}

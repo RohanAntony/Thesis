@@ -16,8 +16,9 @@ RUN apk update && apk add --no-cache nmap && \
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
-COPY package.json ./
+COPY ./annual_cash_flow/package.json ./
 RUN npm install
 EXPOSE 3000
-COPY index.js ./
+COPY ./annual_cash_flow/index.js ./
+COPY ./config.json ./
 CMD ["node", "./index.js"]
