@@ -1,4 +1,5 @@
 {
+  "DB_URL": "mongodb://db/thesis",
   "REDIS": {
     "HOSTNAME": "redis",
     "ABS_CHANNEL": {

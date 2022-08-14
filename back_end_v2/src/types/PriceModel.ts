@@ -1,0 +1,21 @@
+export interface PriceModel {
+  symbol: string,
+  date: Date,
+  price: number,
+  usdinr: number,
+  gold: number,
+  oil: number,
+  naturalgas: number,
+  copper: number,
+  currentRatio: number,
+  debtToEquity: number,
+  eps: number,
+  roa: number,
+  roe: number,
+  inflation: number,
+  unemployment: number,
+  gdpGrowth: number,
+  // output field
+  weeklyAverage: number,
+  monthlyAverage: number,
+}
