@@ -1,13 +1,13 @@
 version: '3.1'
 services:
-  # db:
-  #   image: mongo:4.2
-  #   restart: always
-  #   volumes:
-  #     - ./data/db:/data/db
-  #   environment:
-  #     MONGO_INITDB_ROOT_USERNAME: root
-  #     MONGO_INITDB_ROOT_PASSWORD: example
+  db:
+    image: mongo:4.2
+    restart: always
+    volumes:
+      - ./data/db:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
   redis:
     image: redis:alpine
     ports:
@@ -18,6 +18,14 @@ services:
       dockerfile: ./data_processor/dockerfile
     depends_on:
       - redis
+      - back_end
+  back_end:
+    build: 
+      context: ./
+      dockerfile: ./back_end/dockerfile
+    depends_on:
+      - redis
+      - db
   # backend:
   #   image: rantony/backend
   # frontend:
@@ -29,6 +37,7 @@ services:
     depends_on:
       - redis
       - data_processor
+      - back_end
   annual_cash_flow:
     build:
       context: ./
@@ -36,6 +45,7 @@ services:
     depends_on:
       - redis
       - data_processor
+      - back_end
   annual_income_statement:
     build:
       context: ./
@@ -43,11 +53,16 @@ services:
     depends_on:
       - redis
       - data_processor
+      - back_end
+  daily_ohlc:
+    build: 
+      context: ./
+      dockerfile: ./daily_ohlc/dockerfile
+    depends_on:
+      - redis
+      - data_processor
+      - back_end
   # selenium_instance:
   #   image: selenium/standalone-chrome:102.0
   #   ports: 
   #     - 4444:4444
-  # daily_ohlc:
-  #   image: rantony/daily_ohlc
-  #   depends_on:
-  #     - selenium_instance

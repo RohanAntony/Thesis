@@ -1,0 +1,12 @@
+{
+  "name": "daily_ohlc",
+  "version": "1.0.0",
+  "description": "Fetch daily ohlc for a given company from investing.com",
+  "main": "index.js",
+  "author": "Rohan Antony",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^16.1.0",
+    "redis": "^4.2.0"
+  }
+}

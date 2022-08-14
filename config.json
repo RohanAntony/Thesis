@@ -15,6 +15,11 @@
       "INSTRUCTION": "instruction_ais",
       "DATA": "data_ais",
       "HEARTBEAT": "heatbeat_ais"
+    },
+    "OHLC_CHANNEL": {
+      "INSTRUCTION": "instruction_ohlc",
+      "DATA": "data_ohlc",
+      "HEARTBEAT": "heatbeat_ohlc"
     }
   },
   "DOCUMENT": {

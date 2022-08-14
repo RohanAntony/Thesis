@@ -1,0 +1,14 @@
+{
+  "name": "annual_balance_sheet",
+  "version": "1.0.0",
+  "description": "Fetch annual balance sheet data from tickertape website for a given company",
+  "main": "index.js",
+  "author": "Rohan Antony",
+  "license": "ISC",
+  "dependencies": {
+    "chromedriver": "^102.0.0",
+    "geckodriver": "^1.22.3",
+    "selenium-webdriver": "^4.2.2",
+    "redis": "^4.2.0"
+  }
+}
