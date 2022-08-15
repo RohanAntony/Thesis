@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { OHLCSchemaName } from 'src/schemas/ohlc.schema';
 import { OHLC } from 'src/types/OHLC';
-
 
 @Injectable()
 export class OhlcService {
-  constructor(@InjectModel('OHLC') private readonly ohlcModel: Model<OHLC>) {}
+  constructor(
+    @InjectModel(OHLCSchemaName) private readonly ohlcModel: Model<OHLC>,
+  ) {}
 
   async getSecurityOHLC(symbol: string) {
     return await this.ohlcModel.find(
@@ -20,7 +22,7 @@ export class OhlcService {
     );
   }
 
-  async saveSecurityOHLC(ohlcs: OHLC[]){
+  async saveSecurityOHLC(ohlcs: OHLC[]) {
     const updated = ohlcs.map((ohlc) => {
       const _id = `${new Date(ohlc.date).getTime()}${ohlc.symbol}`;
       const updated = {
@@ -33,7 +35,7 @@ export class OhlcService {
     return await this.ohlcModel.create(updated);
   }
 
-  async deleteSecurityOHLC(symbol: string){
+  async deleteSecurityOHLC(symbol: string) {
     return await this.ohlcModel.deleteMany({
       symbol,
     });

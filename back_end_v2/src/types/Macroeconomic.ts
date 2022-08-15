@@ -1,14 +1,15 @@
-import {
-  CreatedResponse,
-  LastDateResponse,
-  UpdatedResponse,
-} from './BaseTypes';
+import { LastDateResponse, ModifiedResponse } from './BaseTypes';
+
+export enum MacroeconomicType {
+  INFLATION = 'Inflation',
+  UNEMPLOYMENT = 'Unemployment',
+  GDP = 'GDP',
+}
 
 export interface Macroeconomic {
-  year: number,
-  inflation: number,
-  unemployment: number,
-  gdpGrowth: number,
+  year: number;
+  type: MacroeconomicType;
+  value: number;
 }
 
 export interface LastMacroeconomicYearResponse {
@@ -19,10 +20,6 @@ export interface ListMacroeconomicResponse {
   data: Macroeconomic[];
 }
 
-export interface CreatedMacroeconomicResponse {
-  data: CreatedResponse;
-}
-
-export interface UpdatedMacroeconomicResponse {
-  data: UpdatedResponse;
+export interface ModifiedMacroeconomicResponse {
+  data: ModifiedResponse;
 }

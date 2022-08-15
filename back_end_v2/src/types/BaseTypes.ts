@@ -8,6 +8,11 @@ export interface UpdatedResponse {
   count: number,
 }
 
+export interface ModifiedResponse {
+  modified: boolean,
+  count: number,
+}
+
 export interface DeletedResponse {
   deleted: boolean,
   count: number,

@@ -1,0 +1,37 @@
+<div class="content">
+  <h1>Save macroeconomic factor value</h1>
+  <form>
+    <div class="form-field">
+      <mat-form-field appearance="fill">
+        <mat-label>Year</mat-label>
+        <input matInput name="year" type="text" [(ngModel)]="data.year">
+        <button [disabled]="!data.year" matSuffix mat-icon-button aria-label="Clear" (click)="data.year=defaultYear">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+    <div class="form-field" >
+      <mat-form-field appearance="fill">
+        <mat-label>Type</mat-label>
+        <mat-select matNativeControl required [(value)]="data.type">
+          <mat-option *ngFor="let type of mTypeValues" [value]="type">{{ type }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="form-field">
+      <mat-form-field appearance="fill">
+        <mat-label>Value</mat-label>
+        <input matInput name="value" type="text" [(ngModel)]="data.value">
+        <button [disabled]="!data.value" matSuffix mat-icon-button aria-label="Clear" (click)="data.value=0">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+    <div>
+      <button class="form-field" mat-raised-button color="primary" (click)="modifyMacroeconomic()">
+        <mat-icon>save</mat-icon>
+        Save
+      </button>
+    </div>
+  </form>
+</div>
