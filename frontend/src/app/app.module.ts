@@ -5,23 +5,30 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
-import { SettingsModule } from './settings/settings.module';
 import { LoggingModule } from './logging/logging.module';
-import { DashboardModule } from './dashboard/dashboard.module';
-import { SharedModule } from './shared/shared.module';
+import { CompanyModule } from './company/company.module';
+import { MacroeconomicModule } from './macroeconomic/macroeconomic.module';
+import { FundamentalModule } from './fundamental/fundamental.module';
+import { TechnicalModule } from './technical/technical.module';
+import { ProcessModule } from './process/process.module';
+import { MlModelModule } from './ml-model/ml-model.module';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
-    SettingsModule,
+    CompanyModule,
+    MacroeconomicModule,
+    FundamentalModule,
+    TechnicalModule,
+    ProcessModule,
+    MlModelModule,
     LoggingModule,
-    DashboardModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

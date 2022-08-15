@@ -1,23 +1,39 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { CompanyComponent } from './company/company.component';
+import { FundamentalComponent } from './fundamental/fundamental.component';
 import { LoggingComponent } from './logging/logging.component';
+import { MacroeconomicComponent } from './macroeconomic/macroeconomic.component';
 import { MaterialModule } from './material/material.module';
-import { SettingsComponent } from './settings/settings.component';
-import { NavType } from './types/Navigation';
+import { MlModelComponent } from './ml-model/ml-model.component';
+import { ProcessComponent } from './process/process.component';
+import { NavType } from './shared/enums/Navigation';
+import { TechnicalComponent } from './technical/technical.component';
 
 const routes: Routes = [{
-  path: NavType.DASHBOARD,
-  component: DashboardComponent,
+  path: NavType.COMPANY,
+  component: CompanyComponent,
 }, {
-  path: NavType.SETTINGS,
-  component: SettingsComponent,
+  path: NavType.MACROECONOMIC,
+  component: MacroeconomicComponent,
+}, {
+  path: NavType.FUNDAMENTALS,
+  component: FundamentalComponent
+}, {
+  path: NavType.TECHNICAL,
+  component: TechnicalComponent
+}, {
+  path: NavType.MODEL,
+  component: MlModelComponent
+}, {
+  path: NavType.PROCESSES,
+  component: ProcessComponent
 }, {
   path: NavType.LOGS,
   component: LoggingComponent
 }, {
   path: '*',
-  redirectTo: NavType.DASHBOARD,
+  redirectTo: NavType.COMPANY,
 }];
 
 @NgModule({

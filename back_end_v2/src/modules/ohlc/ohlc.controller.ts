@@ -25,8 +25,11 @@ export class OhlcController {
   async getLastSecurityOHLC(
     @Param('symbol') symbol: string,
   ): Promise<LastOHLCDateResponse> {
+    const lastDate = await this.ohlcService.getLastDateSecurityOHLC(symbol)[0];
     return {
-      data: await this.ohlcService.getLastDateSecurityOHLC(symbol)[0],
+      data: {
+        last: lastDate,
+      },
     };
   }
 

@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import {
   Company,
-  CreateCompanyResponse,
+  CreatedCompanyResponse,
   ListCompaniesResponse,
 } from '../../types/Company';
 
@@ -19,11 +19,12 @@ export class CompanyController {
   }
 
   @Post()
-  async addCompany(@Body() company: Company): Promise<CreateCompanyResponse> {
+  async addCompany(@Body() company: Company): Promise<CreatedCompanyResponse> {
     await this.companyService.addCompany(company as Company);
     return {
       data: {
         created: true,
+        count: 1,
       },
     };
   }

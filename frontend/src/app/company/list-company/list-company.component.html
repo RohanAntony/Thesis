@@ -1,0 +1,37 @@
+<div>
+  <h1>Companies</h1>
+  <mat-spinner *ngIf="!fetchedCompanies"></mat-spinner>
+  <table *ngIf="fetchedCompanies" mat-table [dataSource]="companiesList" class="mat-elevation-z8 list-table">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="symbol">
+      <th mat-header-cell *matHeaderCellDef> Symbol </th>
+      <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <!-- Tickertape tag Column -->
+    <ng-container matColumnDef="ticker_tag">
+      <th mat-header-cell *matHeaderCellDef> Tickertape tag </th>
+      <td mat-cell *matCellDef="let element"> {{element.ticker_tag}} </td>
+    </ng-container>
+
+    <!-- Investing tag Column -->
+    <ng-container matColumnDef="investing_tag">
+      <th mat-header-cell *matHeaderCellDef> Investing tag </th>
+      <td mat-cell *matCellDef="let element"> {{element.investing_tag}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+  </table>
+
+</div>

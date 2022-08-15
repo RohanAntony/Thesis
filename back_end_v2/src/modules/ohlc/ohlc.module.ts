@@ -2,10 +2,12 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { OhlcController } from './ohlc.controller';
 import { OhlcService } from './ohlc.service';
-import { ohlcSchema } from '../../schemas/ohlc.schema';
+import { OHLCSchema, OHLCSchemaName } from '../../schemas/ohlc.schema';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: 'OHLC', schema: ohlcSchema }])],
+  imports: [
+    MongooseModule.forFeature([{ name: OHLCSchemaName, schema: OHLCSchema }]),
+  ],
   controllers: [OhlcController],
   providers: [OhlcService],
 })

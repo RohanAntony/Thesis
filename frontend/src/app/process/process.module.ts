@@ -1,18 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ProcessComponent } from './process.component';
 import { MaterialModule } from '../material/material.module';
-import { SettingsComponent } from './settings.component';
+
+
 
 @NgModule({
   declarations: [
-    SettingsComponent
+    ProcessComponent
   ],
   imports: [
     CommonModule,
     MaterialModule
   ],
   exports: [
-    SettingsComponent
+    ProcessComponent
   ]
 })
-export class SettingsModule { }
+export class ProcessModule { }

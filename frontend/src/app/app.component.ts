@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { NavButton, NavType } from './types/Navigation';
+import { NavType } from './shared/enums/Navigation';
+import { NavButton } from './shared/types/Navigation';
 
 @Component({
   selector: 'app-root',
@@ -9,11 +10,15 @@ import { NavButton, NavType } from './types/Navigation';
 export class AppComponent {
   title = 'Icarus';
   tabList: NavButton[] = [
-    { name: NavType.DASHBOARD, icon: 'dashboard' },
-    { name: NavType.SETTINGS, icon: 'settings' },
-    { name: NavType.LOGS, icon: 'calendar_view_day' }
+    { name: NavType.COMPANY, icon: 'corporate_fare' },
+    { name: NavType.MACROECONOMIC, icon: 'public' },
+    { name: NavType.FUNDAMENTALS, icon: 'stacked_bar_chart' },
+    { name: NavType.TECHNICAL, icon: 'ssid_charts' },
+    { name: NavType.MODEL, icon: 'memory' },
+    { name: NavType.PROCESSES, icon: 'grid_view' },
+    { name: NavType.LOGS, icon: 'receipt_long' }
   ];
-  selected: NavType = NavType.SETTINGS;
+  selected: NavType = NavType.COMPANY;
 
   public selectTab(tab: NavType) {
     this.selected = tab;

@@ -12,17 +12,19 @@ export class CompanyService {
   async addCompany(company: Company): Promise<Company> {
     // ToDo: Schedule extraction and ML model operation
     const newCompany = new this.companyModel({
-      ...company, 
-      _id: company.symbol
+      ...company,
+      _id: company.symbol,
     });
     return await newCompany.save();
   }
 
   async getCompanies(): Promise<Company[]> {
-    return await this.companyModel.find({},
+    return await this.companyModel.find(
+      {},
       {
         _id: 0,
         __v: 0,
-      });
+      },
+    );
   }
 }

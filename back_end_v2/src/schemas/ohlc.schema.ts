@@ -1,6 +1,8 @@
 import * as mongoose from 'mongoose';
 
-export const ohlcSchema = new mongoose.Schema(
+export const OHLCSchemaName = 'OHLC';
+
+export const OHLCSchema = new mongoose.Schema(
   {
     _id: String,
     symbol: String,

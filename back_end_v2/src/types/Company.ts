@@ -1,3 +1,5 @@
+import { CreatedResponse } from "./BaseTypes";
+
 export interface Company {
   name: string;
   symbol: string;
@@ -5,10 +7,8 @@ export interface Company {
   investing_tag: string;
 }
 
-export interface CreateCompanyResponse {
-  data: {
-    created: true,
-  },
+export interface CreatedCompanyResponse {
+  data: CreatedResponse,
 }
 
 export interface ListCompaniesResponse {
