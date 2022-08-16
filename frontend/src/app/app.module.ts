@@ -12,6 +12,7 @@ import { FundamentalModule } from './fundamental/fundamental.module';
 import { TechnicalModule } from './technical/technical.module';
 import { ProcessModule } from './process/process.module';
 import { MlModelModule } from './ml-model/ml-model.module';
+import { NgChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { MlModelModule } from './ml-model/ml-model.module';
     ProcessModule,
     MlModelModule,
     LoggingModule,
+    NgChartsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

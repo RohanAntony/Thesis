@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BarChartComponent } from './chart/bar-chart/bar-chart.component';
 import { LineChartComponent } from './chart/line-chart/line-chart.component';
-
+import { NgChartsModule } from 'ng2-charts';
 
 
 @NgModule({
@@ -11,7 +11,8 @@ import { LineChartComponent } from './chart/line-chart/line-chart.component';
     LineChartComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    NgChartsModule
   ],
   exports: [
     BarChartComponent,

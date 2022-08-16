@@ -12,15 +12,19 @@ export class MacroeconomicService {
   ) {}
 
   async getValuesForType(type: MacroeconomicType) {
-    return await this.macroeconomicModel.find(
-      {
-        key: type,
-      },
-      {
-        _id: 0,
-        __v: 0,
-      },
-    );
+    return await this.macroeconomicModel
+      .find(
+        {
+          type,
+        },
+        {
+          _id: 0,
+          __v: 0,
+        },
+      )
+      .sort({
+        year: -1,
+      });
   }
 
   async setValueForType(type: MacroeconomicType, year: number, value: number) {
@@ -34,7 +38,7 @@ export class MacroeconomicService {
         year,
         value,
         type,
-        _id: `${year}${type}`
+        _id: `${year}${type}`,
       });
       return await newMData.save();
     }

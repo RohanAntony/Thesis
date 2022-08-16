@@ -5,19 +5,23 @@ import { MaterialModule } from '../material/material.module';
 import { EditMacroeconomicComponent } from './edit-macroeconomic/edit-macroeconomic.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { ViewMacroeconomicComponent } from './view-macroeconomic/view-macroeconomic.component';
+import { SharedModule } from '../shared/shared.module';
 
 
 
 @NgModule({
   declarations: [
     MacroeconomicComponent,
-    EditMacroeconomicComponent
+    EditMacroeconomicComponent,
+    ViewMacroeconomicComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    SharedModule
   ],
   exports : [
     MacroeconomicComponent
