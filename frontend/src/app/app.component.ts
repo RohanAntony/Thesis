@@ -11,11 +11,11 @@ export class AppComponent {
   title = 'Icarus';
   tabList: NavButton[] = [
     { name: NavType.COMPANY, icon: 'corporate_fare' },
-    { name: NavType.MACROECONOMIC, icon: 'public' },
+    // { name: NavType.PROCESSES, icon: 'grid_view' },
     { name: NavType.FUNDAMENTALS, icon: 'stacked_bar_chart' },
     { name: NavType.TECHNICAL, icon: 'ssid_charts' },
+    { name: NavType.MACROECONOMIC, icon: 'public' },
     { name: NavType.MODEL, icon: 'memory' },
-    { name: NavType.PROCESSES, icon: 'grid_view' },
     { name: NavType.LOGS, icon: 'receipt_long' }
   ];
   selected: NavType = NavType.COMPANY;

@@ -1,47 +1,37 @@
 <div class="content">
   <h1>Add a company</h1>
   <form>
-    <div class="form-field">
-      <mat-form-field appearance="fill">
-        <mat-label>Name</mat-label>
-        <input matInput name="name" type="text" [(ngModel)]="data.name">
-        <button [disabled]="!data.name" matSuffix mat-icon-button aria-label="Clear" (click)="data.name=''">
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field>
-    </div>
-    <div class="form-field" >
-      <mat-form-field appearance="fill">
-        <mat-label>Symbol</mat-label>
-        <input matInput name="symbol" type="text" [(ngModel)]="data.symbol">
-        <button [disabled]="!data.symbol" matSuffix mat-icon-button aria-label="Clear" (click)="data.symbol=''">
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field>
-    </div>
-    <div class="form-field">
-      <mat-form-field appearance="fill">
-        <mat-label>Tickertape Tag</mat-label>
-        <input matInput name="ticker_tag" type="text" [(ngModel)]="data.ticker_tag">
-        <button [disabled]="!data.ticker_tag" matSuffix mat-icon-button aria-label="Clear" (click)="data.ticker_tag=''">
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field>
-    </div>
-    <div class="form-field">
-      <mat-form-field appearance="fill">
-        <mat-label>Investing Tag</mat-label>
-        <input matInput name="investing_tag" type="text" [(ngModel)]="data.investing_tag">
-        <button [disabled]="!data.investing_tag" matSuffix mat-icon-button aria-label="Clear" (click)="data.investing_tag=''">
-          <mat-icon>close</mat-icon>
-        </button>
-      </mat-form-field>
-    </div>
-    <div>
-      <button class="form-field" mat-raised-button color="primary" (click)="addNewCompany()">
-        <mat-icon>add</mat-icon>
-        Add
+    <mat-form-field appearance="fill" class="input-field">
+      <mat-label>Name</mat-label>
+      <input matInput name="name" type="text" [(ngModel)]="data.name">
+      <button [disabled]="!data.name" matSuffix mat-icon-button aria-label="Clear" (click)="data.name=''">
+        <mat-icon>close</mat-icon>
       </button>
-    </div>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="input-field">
+      <mat-label>Symbol</mat-label>
+      <input matInput name="symbol" type="text" [(ngModel)]="data.symbol">
+      <button [disabled]="!data.symbol" matSuffix mat-icon-button aria-label="Clear" (click)="data.symbol=''">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="input-field">
+      <mat-label>Tickertape Tag</mat-label>
+      <input matInput name="ticker_tag" type="text" [(ngModel)]="data.ticker_tag">
+      <button [disabled]="!data.ticker_tag" matSuffix mat-icon-button aria-label="Clear" (click)="data.ticker_tag=''">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="input-field">
+      <mat-label>Investing Tag</mat-label>
+      <input matInput name="investing_tag" type="text" [(ngModel)]="data.investing_tag">
+      <button [disabled]="!data.investing_tag" matSuffix mat-icon-button aria-label="Clear" (click)="data.investing_tag=''">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+    <button class="input-field" mat-raised-button color="primary" (click)="addNewCompany()">
+      <mat-icon>add</mat-icon>
+      Add
+    </button>
   </form>
 </div>

@@ -10,7 +10,7 @@ export class MacroeconomicService {
   constructor(private http: HttpClient) { }
 
   getValuesForType(type: MacroeconomicType) {
-    return this.http.get<Macroeconomic[]>(URLs.MACROECONOMIC + `/${type}`);
+    return this.http.get<{ data: any[] }>(URLs.MACROECONOMIC + `/${type}`);
   }
 
   setValuesForType(mValue: Macroeconomic) {

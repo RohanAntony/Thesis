@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ViewMacroeconomicComponent } from './view-macroeconomic/view-macroeconomic.component';
 import { SharedModule } from '../shared/shared.module';
+import { NgChartsModule } from 'ng2-charts';
 
 
 
@@ -21,7 +22,8 @@ import { SharedModule } from '../shared/shared.module';
     MaterialModule,
     FormsModule,
     HttpClientModule,
-    SharedModule
+    SharedModule,
+    NgChartsModule
   ],
   exports : [
     MacroeconomicComponent

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
 import { OhlcService } from './ohlc.service';
 import {
   CreatedOHLCResponse,
@@ -18,6 +18,19 @@ export class OhlcController {
   ): Promise<ListOHLCResponse> {
     return {
       data: await this.ohlcService.getSecurityOHLC(symbol),
+    };
+  }
+
+  @Get('/range')
+  async getSecurityOHLCForRange(
+    @Query() query: { symbol: string; start: string; end: string },
+  ): Promise<ListOHLCResponse> {
+    return {
+      data: await this.ohlcService.getSecurityOHLCForRange(
+        query.symbol,
+        query.start,
+        query.end,
+      ),
     };
   }
 

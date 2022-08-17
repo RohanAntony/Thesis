@@ -6,11 +6,11 @@ import {
 
 export interface OHLC {
   symbol: string;
-  date: string;
-  open: string;
-  high: string;
-  low: string;
-  close: string;
+  date: Date;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
 }
 
 export interface LastOHLCDateResponse {

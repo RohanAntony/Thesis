@@ -11,7 +11,7 @@ export class ListCompanyComponent implements OnInit {
 
   public companiesList: Company[] = [];
   public fetchedCompanies: boolean = false;
-  public columnsToDisplay = ['symbol', 'name', 'ticker_tag', 'investing_tag'];
+  public columnsToDisplay = ['symbol', 'name', 'ticker_tag', 'investing_tag', 'actions'];
 
   constructor(private companyService: CompanyService) { }
 
@@ -20,6 +20,10 @@ export class ListCompanyComponent implements OnInit {
       this.companiesList = data.data;
       this.fetchedCompanies = true;
     });
+  }
+
+  public execute(elem: any) {
+    console.log(elem);
   }
 
 }

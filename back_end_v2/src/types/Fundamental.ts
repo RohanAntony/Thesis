@@ -7,14 +7,19 @@ import {
 export interface Fundamental {
   symbol: string;
   year: number;
-  netIncome: number;
-  equity: number;
-  totalAssets: number;
   currentAssets: number;
+  nonCurrentAssets: number;
+  totalAssets: number;
   currentLiabilities: number;
+  nonCurrentLiabilities: number;
   totalLiabilities: number;
+  totalEquity: number;
+  revenue: number;
+  netIncome: number;
   eps: number;
-  // Add required fundamentals that need to be saved
+  netChangeInCash: number;
+  capex: number;
+  freeCashFlow: number;
 }
 
 export interface LastFundamentalDateResponse {

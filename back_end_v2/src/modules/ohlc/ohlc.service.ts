@@ -22,6 +22,24 @@ export class OhlcService {
     );
   }
 
+  async getSecurityOHLCForRange(symbol: string, start: string, end: string) {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    return await this.ohlcModel.find(
+      {
+        symbol,
+        date: {
+          $lte: endDate,
+          $gte: startDate,
+        },
+      },
+      {
+        _id: 0,
+        __v: 0,
+      },
+    );
+  }
+
   async saveSecurityOHLC(ohlcs: OHLC[]) {
     const updated = ohlcs.map((ohlc) => {
       const _id = `${new Date(ohlc.date).getTime()}${ohlc.symbol}`;

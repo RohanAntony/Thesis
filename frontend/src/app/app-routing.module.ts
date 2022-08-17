@@ -14,6 +14,9 @@ const routes: Routes = [{
   path: NavType.COMPANY,
   component: CompanyComponent,
 }, {
+  path: NavType.PROCESSES,
+  component: ProcessComponent
+}, {
   path: NavType.MACROECONOMIC,
   component: MacroeconomicComponent,
 }, {
@@ -25,9 +28,6 @@ const routes: Routes = [{
 }, {
   path: NavType.MODEL,
   component: MlModelComponent
-}, {
-  path: NavType.PROCESSES,
-  component: ProcessComponent
 }, {
   path: NavType.LOGS,
   component: LoggingComponent
