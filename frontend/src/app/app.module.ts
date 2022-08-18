@@ -4,15 +4,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from './material/material.module';
-import { LoggingModule } from './logging/logging.module';
-import { CompanyModule } from './company/company.module';
-import { MacroeconomicModule } from './macroeconomic/macroeconomic.module';
-import { FundamentalModule } from './fundamental/fundamental.module';
-import { TechnicalModule } from './technical/technical.module';
-import { ProcessModule } from './process/process.module';
-import { MlModelModule } from './ml-model/ml-model.module';
+import { LoggingModule } from './pages/logging/logging.module';
+import { ProcessModule } from './pages/process/process.module';
+import { MlModelModule } from './pages/ml-model/ml-model.module';
 import { NgChartsModule } from 'ng2-charts';
+import { CompanyModule } from './pages/company/company.module';
+import { FundamentalModule } from './pages/fundamental/fundamental.module';
+import { MacroeconomicModule } from './pages/macroeconomic/macroeconomic.module';
+import { TechnicalModule } from './pages/technical/technical.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -22,7 +22,6 @@ import { NgChartsModule } from 'ng2-charts';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MaterialModule,
     CompanyModule,
     MacroeconomicModule,
     FundamentalModule,
@@ -30,7 +29,7 @@ import { NgChartsModule } from 'ng2-charts';
     ProcessModule,
     MlModelModule,
     LoggingModule,
-    NgChartsModule,
+    SharedModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

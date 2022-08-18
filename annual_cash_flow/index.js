@@ -30,12 +30,12 @@ const fetchData = async (tickertag, symbol, name) => {
 
   const rowClasses = [
     { class: ".period-text span", name: 'period'},
-    { class: "td[data-row='cafCfoa'] .value-cell-content", name: 'cashFromOperatingActivities'},
-    { class: "td[data-row='cafCfia'] .value-cell-content", name: 'cashFromInvestingActivities'},
-    { class: "td[data-row='cafCffa'] .value-cell-content", name: 'cashFromFinancingActivities'},
+    // { class: "td[data-row='cafCfoa'] .value-cell-content", name: 'cashFromOperatingActivities'},
+    // { class: "td[data-row='cafCfia'] .value-cell-content", name: 'cashFromInvestingActivities'},
+    // { class: "td[data-row='cafCffa'] .value-cell-content", name: 'cashFromFinancingActivities'},
     { class: "td[data-row='cafNcic'] .value-cell-content", name: 'netChangeInCash'},
-    { class: "td[data-row='cafCiwc'] .value-cell-content", name: 'changesInWorkingCapital'},
-    { class: "td[data-row='cafCexp'] .value-cell-content", name: 'capitalExpenditures'},
+    // { class: "td[data-row='cafCiwc'] .value-cell-content", name: 'changesInWorkingCapital'},
+    { class: "td[data-row='cafCexp'] .value-cell-content", name: 'capex'},
     { class: "td[data-row='cafFcf'] .value-cell-content", name: 'freeCashFlow'},
   ];
 

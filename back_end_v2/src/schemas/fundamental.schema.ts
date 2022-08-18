@@ -17,6 +17,8 @@ export const FundamentalSchema = new mongoose.Schema(
     revenue: Number,
     netIncome: Number,
     eps: Number,
+    dps: Number,
+    payoutRatio: Number,
     netChangeInCash: Number,
     capex: Number,
     freeCashFlow: Number,

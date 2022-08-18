@@ -17,6 +17,8 @@ export interface Fundamental {
   revenue: number;
   netIncome: number;
   eps: number;
+  dps: number;
+  payoutRatio: number;
   netChangeInCash: number;
   capex: number;
   freeCashFlow: number;

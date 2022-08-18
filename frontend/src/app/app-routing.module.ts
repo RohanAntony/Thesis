@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CompanyComponent } from './company/company.component';
-import { FundamentalComponent } from './fundamental/fundamental.component';
-import { LoggingComponent } from './logging/logging.component';
-import { MacroeconomicComponent } from './macroeconomic/macroeconomic.component';
-import { MaterialModule } from './material/material.module';
-import { MlModelComponent } from './ml-model/ml-model.component';
-import { ProcessComponent } from './process/process.component';
+import { LoggingComponent } from './pages/logging/logging.component';
+import { MlModelComponent } from './pages/ml-model/ml-model.component';
+import { ProcessComponent } from './pages/process/process.component';
 import { NavType } from './shared/enums/Navigation';
-import { TechnicalComponent } from './technical/technical.component';
+import { CompanyComponent } from './pages/company/company.component';
+import { FundamentalComponent } from './pages/fundamental/fundamental.component';
+import { MacroeconomicComponent } from './pages/macroeconomic/macroeconomic.component';
+import { TechnicalComponent } from './pages/technical/technical.component';
+import { SharedModule } from './shared/shared.module';
 
 const routes: Routes = [{
   path: NavType.COMPANY,
@@ -38,7 +38,7 @@ const routes: Routes = [{
 
 @NgModule({
   imports: [
-    MaterialModule,
+    SharedModule,
     RouterModule.forRoot(routes)
   ],
   exports: [RouterModule]
