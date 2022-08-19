@@ -3,6 +3,7 @@
   "BACKEND_URL": "http://back_end_v2:3000/",
   "REDIS": {
     "HOSTNAME": "redis",
+    "LOG_CHANNEL": "logging",
     "ABS_CHANNEL": {
       "INSTRUCTION": "instruction_abs",
       "DATA": "data_abs",

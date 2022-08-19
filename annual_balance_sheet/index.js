@@ -3,7 +3,11 @@ const redis = require('redis');
 
 const config = require('./config.json');
 
-const fetchData = async (tickertag, symbol, name) => {
+const logMessage = (message, publisher, file="ABS") => {
+  publisher.publish(config.REDIS.LOG_CHANNEL, `${file}:${message}`);
+}
+
+const fetchData = async (tickertag, symbol, name, publisher) => {
   const browser = await puppeteer.launch({
     defaultViewport: {
       width: 1920,
@@ -19,10 +23,13 @@ const fetchData = async (tickertag, symbol, name) => {
     ]
   });
   const page = await browser.newPage();  
+  logMessage('Launching browser and opening new page', publisher);
   const url = `https://www.tickertape.in/stocks/${tickertag}/financials?checklist=basic&period=annual&statement=balancesheet&view=normal`
   await page.goto(url, {
     waitUntil: 'networkidle2',
+    timeout: 0,
   });
+  logMessage('Opening URL', publisher);
 
   await page.addStyleTag({
     content: '#__next > .ttactions-root { position: inherit }'
@@ -70,6 +77,7 @@ const fetchData = async (tickertag, symbol, name) => {
       rowBasedData[rowClass.name].push(await page.evaluate(el => el.textContent, cellData))
     } 
   }
+  logMessage('Extracted data from webpage', publisher);
 
   const periodData = [];
   const length = rowBasedData['period'].length;
@@ -84,8 +92,10 @@ const fetchData = async (tickertag, symbol, name) => {
     }
     periodData.push(singlePeriodData);
   }
+  logMessage('Processed data into JSON object', publisher);
 
   await browser.close();
+  logMessage('Browser closed', publisher);
 
   return periodData;
 };
@@ -98,8 +108,11 @@ const fetchData = async (tickertag, symbol, name) => {
   await subscriber.connect();
 
   await subscriber.subscribe(config.REDIS.ABS_CHANNEL.INSTRUCTION, async (message) => {
+    logMessage('Receiving instructions', publisher);
     const data = JSON.parse(message);
-    const responseData = await fetchData(data.tag, data.symbol, data.name);
+    logMessage('Starting browser extraction', publisher);
+    const responseData = await fetchData(data.tag, data.symbol, data.name, publisher);
+    logMessage('Publishing extracted data', publisher);
     publisher.publish(config.REDIS.ABS_CHANNEL.DATA, JSON.stringify(responseData));
   });
 

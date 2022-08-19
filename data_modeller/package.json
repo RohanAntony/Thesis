@@ -1,7 +1,7 @@
 {
-  "name": "data_processor",
+  "name": "data_modeller",
   "version": "1.0.0",
-  "description": "Integrates the extracted data into a common document for storage and analysis",
+  "description": "Builds machine learning model based on extracted data from the extractor processes",
   "main": "index.js",
   "author": "Rohan Antony",
   "license": "ISC",
