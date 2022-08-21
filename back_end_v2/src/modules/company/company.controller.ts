@@ -12,6 +12,7 @@ export class CompanyController {
 
   @Get()
   async getCompanies(): Promise<ListCompaniesResponse> {
+    console.log('Testing');
     const data = await this.companyService.getCompanies();
     return {
       data,

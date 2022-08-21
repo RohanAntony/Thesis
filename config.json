@@ -1,6 +1,6 @@
 {
   "DB_URL": "mongodb://db/thesis",
-  "BACKEND_URL": "http://back_end_v2:3000/",
+  "BACKEND_URL": "http://back_end_v2/",
   "REDIS": {
     "HOSTNAME": "redis",
     "LOG_CHANNEL": "logging",

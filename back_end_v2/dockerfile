@@ -1,0 +1,12 @@
+FROM node:lts-alpine AS builder
+WORKDIR /app
+
+COPY ./back_end_v2/package.json ./
+RUN npm install
+
+COPY ./back_end_v2 ./
+COPY ./config.json ./
+RUN npm run build
+
+EXPOSE 3000
+CMD ["node", "dist/src/main.js"]

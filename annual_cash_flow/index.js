@@ -36,14 +36,14 @@ const fetchData = async (tickertag, symbol, name, publisher) => {
   })
 
   const rowClasses = [
-    { class: ".period-text span", name: 'period'},
+    { class: ".period-text span", name: 'period', post: (data) => parseInt(data.slice(3,7)) },
     // { class: "td[data-row='cafCfoa'] .value-cell-content", name: 'cashFromOperatingActivities'},
     // { class: "td[data-row='cafCfia'] .value-cell-content", name: 'cashFromInvestingActivities'},
     // { class: "td[data-row='cafCffa'] .value-cell-content", name: 'cashFromFinancingActivities'},
-    { class: "td[data-row='cafNcic'] .value-cell-content", name: 'netChangeInCash'},
+    { class: "td[data-row='cafNcic'] .value-cell-content", name: 'netChangeInCash', post: (data) => parseFloat(data.replace(',', '')) },
     // { class: "td[data-row='cafCiwc'] .value-cell-content", name: 'changesInWorkingCapital'},
-    { class: "td[data-row='cafCexp'] .value-cell-content", name: 'capex'},
-    { class: "td[data-row='cafFcf'] .value-cell-content", name: 'freeCashFlow'},
+    { class: "td[data-row='cafCexp'] .value-cell-content", name: 'capex', post: (data) => parseFloat(data.replace(',', '')) },
+    { class: "td[data-row='cafFcf'] .value-cell-content", name: 'freeCashFlow', post: (data) => parseFloat(data.replace(',', '')) },
   ];
 
   const rowBasedData = {};
@@ -61,11 +61,10 @@ const fetchData = async (tickertag, symbol, name, publisher) => {
   for(let index = 0; index < length; index = index + 1){
     const singlePeriodData = {
       symbol,
-      name,
-      type: config.DOCUMENT.ACF
     };
     for(const rowClass of rowClasses) {
-      singlePeriodData[rowClass.name] = rowBasedData[rowClass.name][index];
+      let tempDatum = rowBasedData[rowClass.name][index]
+      singlePeriodData[rowClass.name] = rowClass.post(tempDatum);
     }
     periodData.push(singlePeriodData);
   }

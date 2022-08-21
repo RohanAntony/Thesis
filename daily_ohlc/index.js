@@ -45,21 +45,26 @@ const fetchData = async (tag, type, publisher, last) => {
 
   for(let item of list) {
     const date = await page.evaluate(el => el.textContent, await item.$('td.col-rowDate span.text')) ;
+    const timestamp = new Date(date);
+    const year = timestamp.getFullYear();
     const open = await page.evaluate(el => el.textContent, await item.$('td.col-last_close span.text')) ;
     const close = await page.evaluate(el => el.textContent, await item.$('td.col-last_open span.text')) ;
     const high = await page.evaluate(el => el.textContent, await item.$('td.col-last_max span.text')) ;
     const low = await page.evaluate(el => el.textContent, await item.$('td.col-last_min span.text')) ;
     const volume = await page.evaluate(el => el.textContent, await item.$('td.col-volume span.text')) ;
-    const changePercent = await page.evaluate(el => el.textContent, await item.$('td.col-change_percent span.text')) ;
+    let changePercent = await page.evaluate(el => el.textContent, await item.$('td.col-change_percent span.text')) ;
+    changePercent = changePercent.replace('%', '');
+    changePercent = changePercent.replace(',', '');
     const data = {
       date,
-      timestamp: new Date(date).toISOString(), 
-      open,
-      high,
-      low,
-      close,
-      volume,
-      changePercent
+      timestamp: timestamp.toLocaleString('en-GB').split(',')[0], 
+      year,
+      open: parseFloat(open.replace(',', '')),
+      high: parseFloat(high.replace(',', '')),
+      low: parseFloat(low.replace(',', '')),
+      close: parseFloat(close.replace(',', '')),
+      // volume,
+      changePercent: parseFloat(changePercent)
     };
     dataList.push(data);
   }

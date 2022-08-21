@@ -1,12 +1,11 @@
 {
-  "name": "data_modeller",
+  "name": "data_processor",
   "version": "1.0.0",
-  "description": "Builds machine learning model based on extracted data from the extractor processes",
+  "description": "",
   "main": "index.js",
   "author": "Rohan Antony",
   "license": "ISC",
   "dependencies": {
-    "@tensorflow/tfjs-node": "^3.19.0",
     "danfojs-node": "^1.1.1",
     "redis": "^4.2.0"
   }

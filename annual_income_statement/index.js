@@ -50,8 +50,8 @@ const fetchData = async (tickertag, symbol, name, publisher) => {
   // "freeCashFlow": 10000,
 
   const rowClasses = [
-    { class: ".period-text span", name: 'period'},
-    { class: "td[data-row='incTrev'] .value-cell-content", name: 'revenue'},
+    { class: ".period-text span", name: 'period', post: (data) => parseInt(data.slice(3,7)) },
+    { class: "td[data-row='incTrev'] .value-cell-content", name: 'revenue', post: (data) => parseFloat(data.replace(',', '')) },
     // { class: "td[data-row='incRaw'] .value-cell-content", name: 'rawMaterials'},
     // { class: "td[data-row='incPfc'] .value-cell-content", name: 'powerAndFuelCost'},
     // { class: "td[data-row='incEpc'] .value-cell-content", name: 'employeeCost'},
@@ -63,10 +63,10 @@ const fetchData = async (tickertag, symbol, name, publisher) => {
     // { class: "td[data-row='incIoi'] .value-cell-content", name: 'interestAndOtherItems'},
     // { class: "td[data-row='incPbt'] .value-cell-content", name: 'pbt'},
     // { class: "td[data-row='incToi'] .value-cell-content", name: 'taxesAndOtherItems'},
-    { class: "td[data-row='incNinc'] .value-cell-content", name: 'netIncome'},
-    { class: "td[data-row='incEps'] .value-cell-content", name: 'eps'},
-    { class: "td[data-row='incDps'] .value-cell-content", name: 'dps'},
-    { class: "td[data-row='incPyr'] .value-cell-content", name: 'payoutRatio'},
+    { class: "td[data-row='incNinc'] .value-cell-content", name: 'netIncome', post: (data) => parseFloat(data.replace(',', '')) },
+    { class: "td[data-row='incEps'] .value-cell-content", name: 'eps', post: (data) => parseFloat(data.replace(',', '')) },
+    { class: "td[data-row='incDps'] .value-cell-content", name: 'dps', post: (data) => parseFloat(data.replace(',', '')) },
+    { class: "td[data-row='incPyr'] .value-cell-content", name: 'payoutRatio', post: (data) => parseFloat(data.replace(',', '')) },
   ];
 
   const rowBasedData = {};
@@ -84,11 +84,10 @@ const fetchData = async (tickertag, symbol, name, publisher) => {
   for(let index = 0; index < length; index = index + 1){
     const singlePeriodData = {
       symbol,
-      name,
-      type: config.DOCUMENT.AIS
     };
     for(const rowClass of rowClasses) {
-      singlePeriodData[rowClass.name] = rowBasedData[rowClass.name][index];
+      let tempDatum = rowBasedData[rowClass.name][index];
+      singlePeriodData[rowClass.name] = rowClass.post(tempDatum);
     }
     periodData.push(singlePeriodData);
   }
