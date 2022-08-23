@@ -6,7 +6,7 @@
   "author": "Rohan Antony",
   "license": "ISC",
   "dependencies": {
-    "puppeteer": "^16.1.0",
-    "redis": "^4.2.0"
+    "ioredis": "^5.2.3",
+    "puppeteer": "^16.1.0"
   }
 }

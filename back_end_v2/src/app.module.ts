@@ -8,6 +8,7 @@ import { FundamentalModule } from './modules/fundamental/fundamental.module';
 import { MacroeconomicModule } from './modules/macroeconomic/macroeconomic.module';
 
 import * as config from '../config.json';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [

@@ -1,12 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy, EventPattern, Payload } from '@nestjs/microservices';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Company } from '../../types/Company';
+
+import * as config from '../../../config.json';
 
 @Injectable()
 export class CompanyService {
   constructor(
     @InjectModel('Company') private readonly companyModel: Model<Company>,
+    @Inject(config.REDIS.HOSTNAME) private redisService: ClientProxy,
   ) {}
 
   async addCompany(company: Company): Promise<Company> {
@@ -19,6 +23,8 @@ export class CompanyService {
   }
 
   async getCompanies(): Promise<Company[]> {
+    console.log(`Publishing to channel ${config.REDIS.LOG_CHANNEL}: Test`);
+    this.redisService.emit(config.REDIS.LOG_CHANNEL, 'Test');
     return await this.companyModel.find(
       {},
       {

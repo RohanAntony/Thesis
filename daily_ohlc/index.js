@@ -1,10 +1,9 @@
 const puppeteer = require('puppeteer');
-const redis = require('redis');
-
+const Redis = require('ioredis');
 const config = require('./config.json');
 
 const logMessage = (message, publisher, file="OHLC") => {
-  publisher.publish(config.REDIS.LOG_CHANNEL, `${file}:${message}`);
+  publisher.publish(config.REDIS.LOGGING, `${file}:${message}`);
 }
 
 const fetchData = async (tag, type, publisher, last) => {
@@ -57,7 +56,6 @@ const fetchData = async (tag, type, publisher, last) => {
     changePercent = changePercent.replace(',', '');
     const data = {
       date,
-      timestamp: timestamp.toLocaleString('en-GB').split(',')[0], 
       year,
       open: parseFloat(open.replace(',', '')),
       high: parseFloat(high.replace(',', '')),
@@ -79,24 +77,26 @@ const fetchData = async (tag, type, publisher, last) => {
 
 (async () => {
 
-//   await fetchData("usd-inr-futures", "currencies");
-//   await fetchData("bajaj-finance", "equities");
+  const publisher = new Redis({ host: 'redis', port: 6379 });
+  const subscriber = new Redis({ host: 'redis', port: 6379 });
 
-  const publisher = await redis.createClient({ socket: { host: config.REDIS.HOSTNAME } });;
-  await publisher.connect();
-  const subscriber = await redis.createClient({ socket: { host: config.REDIS.HOSTNAME } });;
-  await subscriber.connect();
-
-  await subscriber.subscribe(config.REDIS.OHLC_CHANNEL.INSTRUCTION, async (message) => {
+  subscriber.subscribe(config.REDIS.INSTRUCTION)
+  subscriber.on("message", async (channel, message) => {
     logMessage('Receiving instructions', publisher);
     const data = JSON.parse(message);
-    logMessage('Starting browser extraction', publisher);
-    const responseData = await fetchData(data.tag, data.type, publisher);
-    logMessage('Publishing extracted data', publisher);
-    publisher.publish(config.REDIS.OHLC_CHANNEL.DATA, JSON.stringify(responseData));
+    if (data.instruction == 'Technical') {
+      logMessage('Starting browser extraction', publisher);
+      const responseData = await fetchData(data.tag, data.type, publisher);
+      logMessage('Publishing extracted data', publisher);
+      publisher.publish(config.REDIS.DATA, JSON.stringify({
+        symbol: data.symbol,
+        type: config.REDIS.DOCUMENT.OHLC,
+        data: responseData
+      }));
+    }
   });
 
-  setInterval(() => {
-    publisher.publish(config.REDIS.OHLC_CHANNEL.HEARTBEAT, (new Date()).toISOString());
-  }, 10000);
+  // setInterval(() => {
+  //   publisher.publish(config.REDIS.HEARTBEAT, (new Date()).toISOString());
+  // }, 10000);
 })();

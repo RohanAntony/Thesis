@@ -1,10 +1,9 @@
 const puppeteer = require('puppeteer');
-const redis = require('redis');
-
+const Redis = require('ioredis');
 const config = require('./config.json');
 
 const logMessage = (message, publisher, file="ACF") => {
-  publisher.publish(config.REDIS.LOG_CHANNEL, `${file}:${message}`);
+  publisher.publish(config.REDIS.LOGGING, `${file}:${message}`);
 }
 
 const fetchData = async (tickertag, symbol, name, publisher) => {
@@ -78,21 +77,26 @@ const fetchData = async (tickertag, symbol, name, publisher) => {
 
 (async () => {
 
-  const publisher = await redis.createClient({ socket: { host: config.REDIS.HOSTNAME } });;
-  await publisher.connect();
-  const subscriber = await redis.createClient({ socket: { host: config.REDIS.HOSTNAME } });;
-  await subscriber.connect();
+  const publisher = new Redis({ host: 'redis', port: 6379 });
+  const subscriber = new Redis({ host: 'redis', port: 6379 });
 
-  await subscriber.subscribe(config.REDIS.ACF_CHANNEL.INSTRUCTION, async (message) => {
+  subscriber.subscribe(config.REDIS.INSTRUCTION)
+  subscriber.on("message", async (channel, message) => {
     logMessage('Receiving instructions', publisher);
     const data = JSON.parse(message);
-    logMessage('Starting browser extraction', publisher);
-    const responseData = await fetchData(data.tag, data.symbol, data.name, publisher);
-    logMessage('Publishing extracted data', publisher);
-    publisher.publish(config.REDIS.ACF_CHANNEL.DATA, JSON.stringify(responseData));
+    if(data.instruction == 'Fundamental') {
+      logMessage('Starting browser extraction', publisher);
+      const responseData = await fetchData(data.tag, data.symbol, data.name, publisher);
+      logMessage('Publishing extracted data', publisher);
+      publisher.publish(config.REDIS.DATA, JSON.stringify({
+        symbol: data.symbol,
+        type: config.REDIS.DOCUMENT.ACF,
+        data: responseData
+      }));
+    }
   });
 
-  setInterval(() => {
-    publisher.publish(config.REDIS.ACF_CHANNEL.HEARTBEAT, (new Date()).toISOString());
-  }, 10000);
+  // setInterval(() => {
+  //   publisher.publish(config.REDIS.HEARTBEAT, (new Date()).toISOString());
+  // }, 10000);
 })();
