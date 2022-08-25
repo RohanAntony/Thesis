@@ -44,8 +44,6 @@ const fetchData = async (tag, type, publisher, last) => {
 
   for(let item of list) {
     const date = await page.evaluate(el => el.textContent, await item.$('td.col-rowDate span.text')) ;
-    const timestamp = new Date(date);
-    const year = timestamp.getFullYear();
     const open = await page.evaluate(el => el.textContent, await item.$('td.col-last_close span.text')) ;
     const close = await page.evaluate(el => el.textContent, await item.$('td.col-last_open span.text')) ;
     const high = await page.evaluate(el => el.textContent, await item.$('td.col-last_max span.text')) ;
@@ -56,7 +54,6 @@ const fetchData = async (tag, type, publisher, last) => {
     changePercent = changePercent.replace(',', '');
     const data = {
       date,
-      year,
       open: parseFloat(open.replace(',', '')),
       high: parseFloat(high.replace(',', '')),
       low: parseFloat(low.replace(',', '')),

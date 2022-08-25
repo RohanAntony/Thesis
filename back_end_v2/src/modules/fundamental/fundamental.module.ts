@@ -13,7 +13,6 @@ import { FundamentalService } from './fundamental.service';
       { name: FundamentalSchemaName, schema: FundamentalSchema },
     ]),
   ],
-  exports: [FundamentalService],
   controllers: [FundamentalController],
   providers: [FundamentalService],
 })

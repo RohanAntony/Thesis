@@ -1,14 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import Redis from 'ioredis';
 import { Model } from 'mongoose';
+import { FundamentalSchemaName } from 'src/schemas/fundamental.schema';
 import { Fundamental } from 'src/types/Fundamental';
 
 @Injectable()
 export class FundamentalService {
+  private redisClient: Redis;
+
   constructor(
-    @InjectModel('Fundamental')
+    @InjectModel(FundamentalSchemaName)
     private readonly fundamentalModel: Model<Fundamental>,
   ) {}
+
+  onApplicationBootstrap() {
+    this.redisClient = new Redis({
+      host: 'redis',
+      port: 6379,
+    });
+    this.redisClient.subscribe('fundamental');
+    this.redisClient.on('message', (channel, message) => {
+      this.handleMessage(channel, message);
+    });
+  }
 
   async getFundamentalsForCompany(symbol: string) {
     return await this.fundamentalModel.find(
@@ -49,5 +64,9 @@ export class FundamentalService {
         year: -1,
       })
       .limit(1);
+  }
+
+  handleMessage(channel, message) {
+    console.log(`${channel}: ${message}`);
   }
 }

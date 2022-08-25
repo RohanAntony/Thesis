@@ -1,9 +1,8 @@
-FROM node:alpine
-RUN mkdir /home/node/app
-WORKDIR /home/node/app
-COPY ./data_modeller/package.json ./
-RUN npm install
-COPY ./data_modeller/index.js ./
+FROM python:3.9
+RUN mkdir /home/app
+WORKDIR /home/app
 COPY ./config.json ./
-VOLUME /myvol
-CMD ["node", "./index.js"]
+COPY ./data_modeller/requirements.txt ./
+RUN pip install -r requirements.txt
+COPY ./data_modeller/main.py ./
+CMD ["stdbuf", "-oL", "python", "main.py"]

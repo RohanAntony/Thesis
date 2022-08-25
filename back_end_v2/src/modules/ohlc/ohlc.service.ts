@@ -1,14 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import Redis from 'ioredis';
 import { Model } from 'mongoose';
 import { OHLCSchemaName } from 'src/schemas/ohlc.schema';
 import { OHLC } from 'src/types/OHLC';
 
 @Injectable()
 export class OhlcService {
+  private redisClient: Redis;
+
   constructor(
     @InjectModel(OHLCSchemaName) private readonly ohlcModel: Model<OHLC>,
   ) {}
+
+  onApplicationBootstrap() {
+    this.redisClient = new Redis({
+      host: 'redis',
+      port: 6379,
+    });
+    this.redisClient.subscribe('fundamental');
+    this.redisClient.on('message', (channel, message) => {
+      this.handleMessage(channel, message);
+    });
+  }
 
   async getSecurityOHLC(symbol: string) {
     return await this.ohlcModel.find(
@@ -73,5 +87,9 @@ export class OhlcService {
         date: -1,
       })
       .limit(1);
+  }
+
+  handleMessage(channel, message) {
+    console.log(`${channel}: ${message}`);
   }
 }

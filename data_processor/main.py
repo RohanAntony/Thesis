@@ -2,13 +2,21 @@ import redis
 import json
 import time
 import pandas as pd
+from random import random
 
+def logMessage(message, publisher):
+  data = json.dumps({
+    "process": 'Data Processor',
+    "log": message,
+  })
+  publisher.publish('logging', data)
 
-def publishMessage(messages, channel, publisher, count=1):
+def publishInstructionMessage(messages, channel, publisher, count=1):
   while count > 0 and len(messages) > 0:
     publishMessage = messages.pop(0)
     data = json.dumps(publishMessage)
-    print('Publishing messages to ' + channel + ' with data ' + data, flush=True)
+    log = f'Publishing messages to {channel} with data {data}'
+    logMessage(log, redisClient)
     publisher.publish(channel, data)
     count -= 1
   return messages
@@ -38,19 +46,38 @@ def mergeOHLCFramesOnDate(framesDict):
   for key in framesDict:
     df = framesDict[key]
     df = df.rename(columns={"close": key})
-    df = df.set_index(['date', 'year'])
+    df = df.set_index('date')
     allFrames.append(df)
-  return pd.concat(allFrames, axis=1, join="inner")
+  newFrames = pd.concat(allFrames, axis=1, join="inner")
+  newFrames = newFrames.reset_index()
+  return newFrames
+
+def fillMissingData(data, index=None):
+  if index:
+    data = data.set_index(index)
+  idx = pd.date_range(data.index.min(), data.index.max())
+  data.index = pd.DatetimeIndex(data.index)
+  data = data.reindex(idx, method='nearest')
+  data = data.reset_index()
+  data = data.rename(columns={'index': index})
+  return data
 
 def mergeFundamentalFramesOnYear(allFrames):
   newFrames = []
   for frame in allFrames:
     df = frame.rename(columns={"period": "year"})
-    df = df.set_index(['year'])
+    df = df.set_index('year')
     newFrames.append(df)
-  return pd.concat(newFrames, axis=1, join="inner")
+  newFrames = pd.concat(newFrames, axis=1, join="inner")
+  newFrames.reset_index()
+  return newFrames
 
-time.sleep(5)
+def addVarianceToColumns(data, columns=[]):
+  for column in columns:
+    data[column] = data[column].apply(lambda x: x + round(x * 0.05 * (0.5 - random()), 1))
+  return data
+
+time.sleep(15)
 
 data = open('config.json')
 config = json.load(data)
@@ -63,53 +90,31 @@ dataSubscriber.subscribe(
   redisConfig['DATA']
 )
 
+logMessage('Connected to Redis and loading indices.json', redisClient)
 
-externalFactors = [{
-  "instruction": "Technical",
-  "tag": "usd-inr",
-  "symbol": "USDINR",
-  "type": "currencies"
-}, {
-  "instruction": "Technical",
-  "tag": "mcx-icomdex-gold",
-  "symbol": "MCIGOLD",
-  "type": "indices"
-}, {
-  "instruction": "Technical",
-  "tag": "mcx-icomdex-crude-oil",
-  "symbol": "MCICRD",
-  "type": "indices"
-}, {
-  "instruction": "Technical",
-  "tag": "mcx-icomdex-energy",
-  "symbol": "MCIENRG",
-  "type": "indices"
-}
-]
-# externalCount = len(externalFactors)
-# externalDataInFrames = {}
+externalFactors = open('indices.json')
+externalFactors = json.load(externalFactors)
+externalCount = len(externalFactors)
+externalDataInFrames = {}
 
-# for message in dataSubscriber.listen():
-#   externalFactors = publishMessage(externalFactors, redisConfig['INSTRUCTION'], redisClient, 2)
-#   if isMessage(message):
-#     response = parseMessageToJSON(message)
-#     symbol = response["symbol"]
-#     data = response["data"]
-#     writeToAPI(data, '')
-#     externalDataInFrames[symbol] = convertOHLCToDF(json.dumps(data))
-#     externalCount -= 1
-#   if externalCount == 0:
-#     break
+for message in dataSubscriber.listen():
+  externalFactors = publishInstructionMessage(externalFactors, redisConfig['INSTRUCTION'], redisClient, 2)
+  if isMessage(message):
+    response = parseMessageToJSON(message)
+    symbol = response["symbol"]
+    data = response["data"]
+    logMessage(f'Recieved message for {symbol}')
+    writeToAPI(data, '')
+    externalDataInFrames[symbol] = convertOHLCToDF(json.dumps(data))
+    externalCount -= 1
+  if externalCount == 0:
+    break
 
-# externalGlobalFrame = mergeOHLCFramesOnDate(externalDataInFrames)
-# externalGlobalFrame.to_csv('/myvol/external.csv')
+externalGlobalFrame = mergeOHLCFramesOnDate(externalDataInFrames)
+externalGlobalFrame = fillMissingData(externalGlobalFrame, 'date')
 
-companies = [{
-  "symbol": "BAJFINANCE",
-  "name": "Bajaj Finance Ltd",
-  "investing_tag": "bajaj-finance",
-  "ticker_tag": "bajaj-finance-BJFN",
-}]
+companies = open('./companies.json')
+companies = json.load(companies)
 for company in companies:
   companyMessages = [{
     "instruction": "Fundamental",
@@ -122,7 +127,7 @@ for company in companies:
     "symbol": company["symbol"],
     "type": "equities"
   }]
-  companyMessages = publishMessage(companyMessages, redisConfig['INSTRUCTION'], redisClient, 2)
+  companyMessages = publishInstructionMessage(companyMessages, redisConfig['INSTRUCTION'], redisClient, 2)
   companyReplyCount = 4
   fundamentalFrames = []
   technicalFrame = ''
@@ -138,14 +143,34 @@ for company in companies:
         fundamentalFrames.append(frame)
       companyReplyCount -= 1
     if companyReplyCount == 0:
+      # Merge fundamental data frames first
       mergedFundamentalFrame = mergeFundamentalFramesOnYear(fundamentalFrames)
-      mergedFundamentalFrame.to_csv('/myvol/test.csv')
+      # Merge technical data to fundamental data
+      technicalFrame['year'] = technicalFrame['date'].dt.year
       companyFrame = pd.merge(technicalFrame, mergedFundamentalFrame, on='year', how="inner")
-      companyFrame = companyFrame.set_index('date')
-      idx = pd.date_range(companyFrame.index.min(), companyFrame.index.max())
-      companyFrame.index = pd.DatetimeIndex(companyFrame.index)
-      companyFrame = companyFrame.reindex(idx, fill_value='nearest')
-      companyFrame.to_csv('/myvol/' + company['symbol'] + '.csv')
+      companyFrame = companyFrame.drop(columns=['year'])
+      # Fill missing dates in between with nearest value
+      companyFrame = fillMissingData(companyFrame, 'date')
+      # Add some variance to fundamental data
+      companyFrame = addVarianceToColumns(companyFrame, columns=[
+        'revenue',
+        'netIncome',
+        'eps',
+        'dps',
+        'payoutRatio',
+        'netChangeInCash',
+        'capex',
+        'freeCashFlow',
+        'currentAssets',
+        'nonCurrentAssets',
+        'totalAssets',
+        'currentLiabilities',
+        'nonCurrentLiabilities',
+        'totalLiabilities',
+        'totalEquity'
+      ])
+      # Merge external frame with company frame
+      finalFrame = pd.merge(externalGlobalFrame, companyFrame, on='date', how='inner')
+      # Publish to redis channel instead of writing to a file
+      finalFrame.to_csv('/myvol/' + company['symbol'] + '.csv', index=False)
       break
-
-

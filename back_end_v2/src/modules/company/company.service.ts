@@ -5,13 +5,28 @@ import { Model } from 'mongoose';
 import { Company } from '../../types/Company';
 
 import * as config from '../../../config.json';
+import Redis from 'ioredis';
+import { CompanySchemaName } from 'src/schemas/company.schema';
 
 @Injectable()
 export class CompanyService {
+  private redisClient: Redis;
+
   constructor(
-    @InjectModel('Company') private readonly companyModel: Model<Company>,
-    @Inject(config.REDIS.HOSTNAME) private redisService: ClientProxy,
+    @InjectModel(CompanySchemaName)
+    private readonly companyModel: Model<Company>,
   ) {}
+
+  onApplicationBootstrap() {
+    this.redisClient = new Redis({
+      host: 'redis',
+      port: 6379,
+    });
+    this.redisClient.subscribe('company');
+    this.redisClient.on('message', (channel, message) => {
+      this.handleMessage(channel, message);
+    });
+  }
 
   async addCompany(company: Company): Promise<Company> {
     // ToDo: Schedule extraction and ML model operation
@@ -23,8 +38,7 @@ export class CompanyService {
   }
 
   async getCompanies(): Promise<Company[]> {
-    console.log(`Publishing to channel ${config.REDIS.LOG_CHANNEL}: Test`);
-    this.redisService.emit(config.REDIS.LOG_CHANNEL, 'Test');
+    console.log(`Publishing to channel logging: Test`);
     return await this.companyModel.find(
       {},
       {
@@ -32,5 +46,9 @@ export class CompanyService {
         __v: 0,
       },
     );
+  }
+
+  handleMessage(channel, message) {
+    console.log(`${channel}: ${message}`);
   }
 }

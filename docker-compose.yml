@@ -1,26 +1,26 @@
 version: '3.1'
 services:
-  # db:
-  #   image: mongo:4.2
-  #   restart: always
-  #   volumes:
-  #     - ./data/db:/data/db
-  #   ports: 
-  #     - 27017:27017
+  db:
+    image: mongo:4.2
+    restart: always
+    volumes:
+      - ./data/db:/data/db
+    ports: 
+      - 27017:27017
   redis:
     image: redis:alpine
     ports:
       - 6379:6379
-  # back_end:
-  #   build: 
-  #     context: ./
-  #     dockerfile: ./back_end_v2/dockerfile
-  #   ports: 
-  #     - 3000:3000
-  #   depends_on:
-  #     - redis
-  #     - db
-  #     - data_processor
+  back_end:
+    build: 
+      context: ./
+      dockerfile: ./back_end_v2/dockerfile
+    ports: 
+      - 3000:3000
+    depends_on:
+      - redis
+      - db
+      - data_processor
   # front_end:
   #   build:
   #     context: ./
@@ -30,6 +30,14 @@ services:
   #     - back_end
   #   ports: 
   #     - 80:80
+  # data_modeller:
+  #   build:
+  #     context: ./
+  #     dockerfile: ./data_modeller/dockerfile
+  #   volumes:
+  #     - ./data/model:/myvol
+  #   depends_on:
+  #     - redis
   data_processor:
     build:
       context: ./
@@ -38,27 +46,27 @@ services:
       - ./data/model:/myvol
     depends_on:
       - redis
-  annual_balance_sheet:
-    build:
-      context: ./
-      dockerfile: ./annual_balance_sheet/dockerfile
-    depends_on:
-      - redis
-  annual_cash_flow:
-    build:
-      context: ./
-      dockerfile: ./annual_cash_flow/dockerfile
-    depends_on:
-      - redis
-  annual_income_statement:
-    build:
-      context: ./
-      dockerfile: ./annual_income_statement/dockerfile
-    depends_on:
-      - redis
-  daily_ohlc:
-    build: 
-      context: ./
-      dockerfile: ./daily_ohlc/dockerfile
-    depends_on:
-      - redis
+  # annual_balance_sheet:
+  #   build:
+  #     context: ./
+  #     dockerfile: ./annual_balance_sheet/dockerfile
+  #   depends_on:
+  #     - redis
+  # annual_cash_flow:
+  #   build:
+  #     context: ./
+  #     dockerfile: ./annual_cash_flow/dockerfile
+  #   depends_on:
+  #     - redis
+  # annual_income_statement:
+  #   build:
+  #     context: ./
+  #     dockerfile: ./annual_income_statement/dockerfile
+  #   depends_on:
+  #     - redis
+  # daily_ohlc:
+  #   build: 
+  #     context: ./
+  #     dockerfile: ./daily_ohlc/dockerfile
+  #   depends_on:
+  #     - redis

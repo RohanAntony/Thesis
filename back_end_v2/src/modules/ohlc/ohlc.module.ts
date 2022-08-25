@@ -8,7 +8,6 @@ import { OHLCSchema, OHLCSchemaName } from '../../schemas/ohlc.schema';
   imports: [
     MongooseModule.forFeature([{ name: OHLCSchemaName, schema: OHLCSchema }]),
   ],
-  exports: [OhlcService],
   controllers: [OhlcController],
   providers: [OhlcService],
 })

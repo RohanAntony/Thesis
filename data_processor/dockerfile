@@ -4,5 +4,7 @@ WORKDIR /home/app
 COPY ./config.json ./
 COPY ./data_processor/requirements.txt ./
 RUN pip install -r requirements.txt
+COPY ./data_processor/companies.json ./
+COPY ./data_processor/indices.json ./
 COPY ./data_processor/main.py ./
 CMD ["stdbuf", "-oL", "python", "main.py"]

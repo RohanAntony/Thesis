@@ -1,0 +1,21 @@
+[{
+  "instruction": "Technical",
+  "tag": "usd-inr",
+  "symbol": "USDINR",
+  "type": "currencies"
+}, {
+  "instruction": "Technical",
+  "tag": "mcx-icomdex-gold",
+  "symbol": "MCIGOLD",
+  "type": "indices"
+}, {
+  "instruction": "Technical",
+  "tag": "mcx-icomdex-crude-oil",
+  "symbol": "MCICRD",
+  "type": "indices"
+}, {
+  "instruction": "Technical",
+  "tag": "mcx-icomdex-base-metals",
+  "symbol": "MCIMETL",
+  "type": "indices"
+}]

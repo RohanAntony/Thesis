@@ -8,7 +8,7 @@ import { FundamentalModule } from './modules/fundamental/fundamental.module';
 import { MacroeconomicModule } from './modules/macroeconomic/macroeconomic.module';
 
 import * as config from '../config.json';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { LoggingModule } from './modules/logging/logging.module';
 
 @Module({
   imports: [
@@ -17,6 +17,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     OhlcModule,
     FundamentalModule,
     MacroeconomicModule,
+    LoggingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
