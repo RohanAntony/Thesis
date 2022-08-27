@@ -172,5 +172,5 @@ for company in companies:
       # Merge external frame with company frame
       finalFrame = pd.merge(externalGlobalFrame, companyFrame, on='date', how='inner')
       # Publish to redis channel instead of writing to a file
-      finalFrame.to_csv('/myvol/' + company['symbol'] + '.csv', index=False)
+      finalFrame.to_csv('/data/' + company['symbol'] + '.csv', index=False)
       break
