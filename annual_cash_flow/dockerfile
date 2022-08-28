@@ -18,7 +18,6 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 COPY ./annual_cash_flow/package.json ./
 RUN npm install
-EXPOSE 3000
 COPY ./annual_cash_flow/index.js ./
 COPY ./config.json ./
 CMD ["node", "./index.js"]

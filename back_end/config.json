@@ -1,0 +1,28 @@
+{
+  "DB_URL": "mongodb://localhost:27017/thesis",
+  "REDIS": {
+    "HOSTNAME": "redis",
+    "LOG_CHANNEL": "logging",
+    "LOG_CHANNEL_2": "logging2",
+    "ABS_CHANNEL": {
+      "INSTRUCTION": "instruction_abs",
+      "DATA": "data_abs",
+      "HEARTBEAT": "heatbeat_abs"
+    },
+    "ACF_CHANNEL": {
+      "INSTRUCTION": "instruction_acf",
+      "DATA": "data_acf",
+      "HEARTBEAT": "heatbeat_acf"
+    },
+    "AIS_CHANNEL": {
+      "INSTRUCTION": "instruction_ais",
+      "DATA": "data_ais",
+      "HEARTBEAT": "heatbeat_ais"
+    },
+    "OHLC_CHANNEL": {
+      "INSTRUCTION": "instruction_ohlc",
+      "DATA": "data_ohlc",
+      "HEARTBEAT": "heatbeat_ohlc"
+    }
+  }
+}
