@@ -46,16 +46,16 @@ export class OhlcController {
     };
   }
 
-  @Post()
-  async saveSecurityOHLC(@Body() ohlcs: OHLC[]): Promise<CreatedOHLCResponse> {
-    const data = await this.ohlcService.saveSecurityOHLC(ohlcs);
-    return {
-      data: {
-        created: true,
-        count: data.length,
-      },
-    };
-  }
+  // @Post()
+  // async saveSecurityOHLC(@Body() ohlcs: OHLC[]): Promise<CreatedOHLCResponse> {
+  //   const data = await this.ohlcService.saveSecurityOHLC(ohlcs);
+  //   return {
+  //     data: {
+  //       created: true,
+  //       count: data.length,
+  //     },
+  //   };
+  // }
 
   @Delete(':symbol')
   async deleteSecurityOHLC(

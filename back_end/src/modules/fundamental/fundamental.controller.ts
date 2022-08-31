@@ -39,18 +39,18 @@ export class FundamentalController {
   }
 
   // Set for a symbol
-  @Post('')
-  async setFundamentalsForCompany(
-    @Body() fundamentals: Fundamental[],
-  ): Promise<CreatedFundamentalResponse> {
-    const data = await this.fundamentalService.setFundamentalsForCompany(
-      fundamentals,
-    );
-    return {
-      data: {
-        created: true,
-        count: data.length,
-      },
-    };
-  }
+  // @Post('')
+  // async setFundamentalsForCompany(
+  //   @Body() fundamentals: Fundamental[],
+  // ): Promise<CreatedFundamentalResponse> {
+  //   const data = await this.fundamentalService.setFundamentalsForCompany(
+  //     fundamentals,
+  //   );
+  //   return {
+  //     data: {
+  //       created: true,
+  //       count: data.length,
+  //     },
+  //   };
+  // }
 }

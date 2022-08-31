@@ -7,8 +7,8 @@ export const CompanySchema = new mongoose.Schema(
     _id: String,
     name: String,
     symbol: String,
-    ticker_tag: String,
-    investing_tag: String,
+    tickerTag: String,
+    investingTag: String,
   },
   {
     _id: false,

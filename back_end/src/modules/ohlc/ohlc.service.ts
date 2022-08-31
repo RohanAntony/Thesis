@@ -18,7 +18,7 @@ export class OhlcService {
       host: 'redis',
       port: 6379,
     });
-    this.redisClient.subscribe('fundamental');
+    this.redisClient.subscribe('ohlc');
     this.redisClient.on('message', (channel, message) => {
       this.handleMessage(channel, message);
     });
@@ -55,6 +55,9 @@ export class OhlcService {
   }
 
   async saveSecurityOHLC(ohlcs: OHLC[]) {
+    await this.ohlcModel.deleteMany({
+      symbol: ohlcs[0].symbol,
+    })
     const updated = ohlcs.map((ohlc) => {
       const _id = `${new Date(ohlc.date).getTime()}${ohlc.symbol}`;
       const updated = {
@@ -64,7 +67,7 @@ export class OhlcService {
       };
       return updated;
     });
-    return await this.ohlcModel.create(updated);
+    console.log(await this.ohlcModel.create(updated));
   }
 
   async deleteSecurityOHLC(symbol: string) {
@@ -89,7 +92,10 @@ export class OhlcService {
       .limit(1);
   }
 
-  handleMessage(channel, message) {
-    console.log(`${channel}: ${message}`);
+  handleMessage(channel: string, message: string) {
+    const ohlcs = JSON.parse(message);
+    // console.log(channel, message, ohlcs);
+    console.log(channel, typeof message);
+    this.saveSecurityOHLC(ohlcs);
   }
 }

@@ -1,0 +1,21 @@
+[{
+  "symbol": "BJFN",
+  "name": "Bajaj Finance Ltd",
+  "investing_tag": "bajaj-finance",
+  "ticker_tag": "bajaj-finance-BJFN"
+},{
+  "symbol": "RELI",
+  "name": "Reliance Industries Ltd",
+  "investing_tag": "reliance-industries",
+  "ticker_tag": "reliance-industries-RELI"
+},{
+  "symbol": "HLL",
+  "name": "Hindustan Unilever Ltd",
+  "investing_tag": "hindustan-unilever",
+  "ticker_tag": "hindustan-unilever-HLL"
+}, {
+  "symbol": "BRTI",
+  "name": "Bharti Airtel Ltd",
+  "investing_tag": "bharti-airtel",
+  "ticker_tag": "bharti-airtel-BRTI"
+}]

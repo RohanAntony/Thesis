@@ -1,0 +1,62 @@
+,{
+  "symbol": "HLL",
+  "name": "Hindustan Unilever Ltd",
+  "investing_tag": "hindustan-unilever",
+  "ticker_tag": "hindustan-unilever-HLL"
+}, {
+  "symbol": "BRTI",
+  "name": "Bharti Airtel Ltd",
+  "investing_tag": "bharti-airtel",
+  "ticker_tag": "bharti-airtel-BRTI"
+}
+
+
+, {
+  "instruction": "Technical",
+  "tag": "mcx-icomdex-crude-oil",
+  "symbol": "MCICRD",
+  "type": "indices"
+}, {
+  "instruction": "Technical",
+  "tag": "mcx-icomdex-base-metals",
+  "symbol": "MCIMETL",
+  "type": "indices"
+}
+
+
+, {
+  "symbol": "",
+  "name": "",
+  "investingTag": "",
+  "tickerTag": ""
+}, {
+  "symbol": "",
+  "name": "",
+  "investingTag": "",
+  "tickerTag": ""
+}, {
+  "symbol": "",
+  "name": "",
+  "investingTag": "",
+  "tickerTag": ""
+}, {
+  "symbol": "",
+  "name": "",
+  "investingTag": "",
+  "tickerTag": ""
+}, {
+  "symbol": "",
+  "name": "",
+  "investingTag": "",
+  "tickerTag": ""
+}, {
+  "symbol": "",
+  "name": "",
+  "investingTag": "",
+  "tickerTag": ""
+}, {
+  "symbol": "",
+  "name": "",
+  "investingTag": "",
+  "tickerTag": ""
+}

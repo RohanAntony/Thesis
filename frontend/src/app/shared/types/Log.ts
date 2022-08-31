@@ -1,4 +1,5 @@
 export interface Log {
-  time: Date;
-  message: String;
+  timestamp: Date;
+  process: string;
+  log: String;
 }

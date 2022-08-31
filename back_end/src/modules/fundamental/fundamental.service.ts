@@ -34,10 +34,15 @@ export class FundamentalService {
         _id: 0,
         __v: 0,
       },
-    );
+    ).sort({
+      year: 1,
+    });
   }
 
   async setFundamentalsForCompany(fundamentals: Fundamental[]) {
+    await this.fundamentalModel.deleteMany({
+      symbol: fundamentals[0].symbol,
+    });
     const updated = fundamentals.map((fundamental) => {
       const _id = `${fundamental.year}${fundamental.symbol}`;
       const updated = {
@@ -46,7 +51,7 @@ export class FundamentalService {
       };
       return updated;
     });
-    return await this.fundamentalModel.create(updated);
+    console.log(await this.fundamentalModel.create(updated));
   }
 
   async getLastYearFundamentalsForCompany(symbol: string) {
@@ -66,7 +71,10 @@ export class FundamentalService {
       .limit(1);
   }
 
-  handleMessage(channel, message) {
-    console.log(`${channel}: ${message}`);
+  handleMessage(channel: string, message: string) {
+    const fundamentals = JSON.parse(message);
+    // console.log(channel, message, fundamentals);
+    console.log(channel, typeof message);
+    this.setFundamentalsForCompany(fundamentals);
   }
 }

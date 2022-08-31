@@ -1,21 +1,36 @@
 [{
   "symbol": "BJFN",
   "name": "Bajaj Finance Ltd",
-  "investing_tag": "bajaj-finance",
-  "ticker_tag": "bajaj-finance-BJFN"
+  "investingTag": "bajaj-finance",
+  "tickerTag": "bajaj-finance-BJFN"
 },{
   "symbol": "RELI",
   "name": "Reliance Industries Ltd",
-  "investing_tag": "reliance-industries",
-  "ticker_tag": "reliance-industries-RELI"
+  "investingTag": "reliance-industries",
+  "tickerTag": "reliance-industries-RELI"
 },{
   "symbol": "HLL",
   "name": "Hindustan Unilever Ltd",
-  "investing_tag": "hindustan-unilever",
-  "ticker_tag": "hindustan-unilever-HLL"
+  "investingTag": "hindustan-unilever",
+  "tickerTag": "hindustan-unilever-HLL"
 }, {
   "symbol": "BRTI",
   "name": "Bharti Airtel Ltd",
-  "investing_tag": "bharti-airtel",
-  "ticker_tag": "bharti-airtel-BRTI"
+  "investingTag": "bharti-airtel",
+  "tickerTag": "bharti-airtel-BRTI"
+}, {
+  "symbol": "BRIT",
+  "name": "Britannia Industries Ltd",
+  "investingTag": "britannia-industries",
+  "tickerTag": "britannia-industries-BRIT"
+}, {
+  "symbol": "TAMO",
+  "name": "Tata Motors Ltd",
+  "investingTag": "tata-motors-ltd",
+  "tickerTag": "tata-motors-TAMO"
+}, {
+  "symbol": "APSE",
+  "name": "Adani Ports and Special Economic Zone Ltd",
+  "investingTag": "mundra-port-special-eco.-zone",
+  "tickerTag": "adani-ports-and-special-economic-zone-APSE"
 }]

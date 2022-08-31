@@ -47,6 +47,7 @@ export class LoggingService {
 
   async handleMessage(channel: string, message: string) {
     const jsonMessage = JSON.parse(message);
-    return await this.addLog(jsonMessage.process, jsonMessage.log);
+    console.log(channel, typeof message, message, JSON.parse(message));
+    await this.addLog(jsonMessage.process, jsonMessage.log);
   }
 }

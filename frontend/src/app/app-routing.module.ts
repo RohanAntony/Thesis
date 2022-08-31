@@ -17,9 +17,9 @@ const routes: Routes = [{
   path: NavType.PROCESSES,
   component: ProcessComponent
 }, {
-  path: NavType.MACROECONOMIC,
-  component: MacroeconomicComponent,
-}, {
+//   path: NavType.MACROECONOMIC,
+//   component: MacroeconomicComponent,
+// }, {
   path: NavType.FUNDAMENTALS,
   component: FundamentalComponent
 }, {

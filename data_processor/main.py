@@ -1,3 +1,4 @@
+from heapq import merge
 import redis
 import json
 import time
@@ -10,14 +11,21 @@ def logMessage(message, publisher):
     "log": message,
   })
   publisher.publish('logging', data)
+  print(message, flush=True)
+
+def publishMessageToChannel(message, channel, publisher, logString):
+  if type(message) is not str:
+    data = json.dumps(message)
+  else:
+    data = message
+  logMessage(logString, publisher)
+  publisher.publish(channel, data)
 
 def publishInstructionMessage(messages, channel, publisher, count=1):
   while count > 0 and len(messages) > 0:
-    publishMessage = messages.pop(0)
-    data = json.dumps(publishMessage)
-    log = f'Publishing messages to {channel} with data {data}'
-    logMessage(log, redisClient)
-    publisher.publish(channel, data)
+    message = messages.pop(0)
+    data = json.dumps(message)
+    publishMessageToChannel(message, channel, publisher, f'Publishing message to {channel} with data {data}')
     count -= 1
   return messages
 
@@ -28,15 +36,7 @@ def parseMessageToJSON(message):
   jsonString = message['data'].decode()
   return json.loads(jsonString)
 
-def writeToAPI(data="", endpoint=""):
-  pass
-
-def convertOHLCToDF(data, dropColumns=['open', 'high', 'low', 'changePercent']):
-  df = pd.read_json(data, orient='records')
-  df = df.drop(columns=dropColumns)
-  return df
-
-def convertFundamentalToDF(data, dropColumns=[]):
+def convertJSONToDF(data, dropColumns=[]):
   df = pd.read_json(data, orient='records')
   df = df.drop(columns=dropColumns)
   return df
@@ -103,27 +103,38 @@ for message in dataSubscriber.listen():
     response = parseMessageToJSON(message)
     symbol = response["symbol"]
     data = response["data"]
-    logMessage(f'Recieved message for {symbol}')
-    writeToAPI(data, '')
-    externalDataInFrames[symbol] = convertOHLCToDF(json.dumps(data))
+    technicalFrame = convertJSONToDF(json.dumps(data), dropColumns=['changePercent'])
+    # Publish technical data to backend
+    technicalData = technicalFrame.to_json(orient='records', index=True)
+    # technicalFrame.to_json('/data/ohlc'+ symbol + '.json', orient='records', index=True)
+    logMessage(f'Recieved message for {symbol}', redisClient)
+    ohlcChannel = redisConfig['OHLC']
+    publishMessageToChannel(technicalData, ohlcChannel , redisClient, f'Publishing data to channel { ohlcChannel } for symbol {symbol}')
+    externalDataInFrames[symbol] = convertJSONToDF(json.dumps(data), ['open', 'high', 'low', 'changePercent', 'symbol'])
     externalCount -= 1
   if externalCount == 0:
     break
 
 externalGlobalFrame = mergeOHLCFramesOnDate(externalDataInFrames)
 externalGlobalFrame = fillMissingData(externalGlobalFrame, 'date')
+externalGlobalFrame['date'] = pd.to_datetime(externalGlobalFrame['date'])
+externalGlobalFrame = externalGlobalFrame.reset_index()
+externalGlobalFrame = externalGlobalFrame.set_index('date')
+# externalGlobalFrame.to_csv('/data/all.csv')
+
+# externalGlobalFrame = pd.read_csv('/data/all.csv')
 
 companies = open('./companies.json')
 companies = json.load(companies)
 for company in companies:
   companyMessages = [{
     "instruction": "Fundamental",
-    "tag": company["ticker_tag"],
+    "tag": company["tickerTag"],
     "symbol": company["symbol"],
     "name": company["name"]
   }, {
     "instruction": "Technical",
-    "tag": company["investing_tag"],
+    "tag": company["investingTag"],
     "symbol": company["symbol"],
     "type": "equities"
   }]
@@ -135,19 +146,43 @@ for company in companies:
     if isMessage(message):
       response = parseMessageToJSON(message)
       data = response['data']
-      writeToAPI(data, '')
+      # publishMessageToChannel(data, '', redisClient, )
       if response['type'] in ['OHLC']:
-        technicalFrame = convertOHLCToDF(json.dumps(data), dropColumns=['changePercent'])
+        symbol = response['symbol']
+        technicalFrame = convertJSONToDF(json.dumps(data), dropColumns=['changePercent'])
+        # Publish technical data to backend
+        technicalData = technicalFrame.to_json(orient='records', index=True)
+        # technicalFrame.to_json('/data/ohlc'+ symbol + '.json', orient='records', index=True)
+        ohlcChannel = redisConfig['OHLC']
+        publishMessageToChannel(technicalData, ohlcChannel , redisClient, f'Publishing technical data to channel { ohlcChannel } for symbol {symbol}')
+        technicalFrame = technicalFrame.drop(columns=['open', 'high', 'low'])
       else:
-        frame = convertFundamentalToDF(json.dumps(data), dropColumns=['symbol'])
+        frame = convertJSONToDF(json.dumps(data), dropColumns=['symbol'])
         fundamentalFrames.append(frame)
       companyReplyCount -= 1
     if companyReplyCount == 0:
+      symbol = company['symbol']
       # Merge fundamental data frames first
       mergedFundamentalFrame = mergeFundamentalFramesOnYear(fundamentalFrames)
-      # Merge technical data to fundamental data
+      # Publish fundamental data to backend 
+      mergedFundamentalFrame['symbol'] = symbol
+      mergedFundamentalFrame = mergedFundamentalFrame.reset_index()
+      fundamentalData = mergedFundamentalFrame.to_json(orient='records')
+      # mergedFundamentalFrame.to_json('/data/funda' + symbol + '.json', orient='records')
+      fundamentalChannel = redisConfig['FUNDAMENTAL']
+      publishMessageToChannel(fundamentalData, fundamentalChannel, redisClient, f'Publishing fundamental data to channel {fundamentalChannel} for symbol {symbol}')
+      mergedFundamentalFrame = mergedFundamentalFrame.set_index('year')
+      # Drop symbol column
       technicalFrame['year'] = technicalFrame['date'].dt.year
-      companyFrame = pd.merge(technicalFrame, mergedFundamentalFrame, on='year', how="inner")
+      technicalFrame = technicalFrame.set_index('date')
+      technicalFrame = technicalFrame.drop(columns=['symbol'])
+      # mergedFundamentalFrame = mergedFundamentalFrame.reset_index()
+      mergedFundamentalFrame = mergedFundamentalFrame.drop(columns=['symbol'])      
+      # Merge technical data to fundamental data
+      # technicalFrame.to_csv('/data/technical'+symbol+'.csv')
+      # mergedFundamentalFrame.to_csv('/data/fundamental'+symbol+'.csv')
+      # companyFrame = pd.merge(technicalFrame, mergedFundamentalFrame, on='year', how="inner")
+      companyFrame = technicalFrame.reset_index().merge(mergedFundamentalFrame, on="year", how="inner")
       companyFrame = companyFrame.drop(columns=['year'])
       # Fill missing dates in between with nearest value
       companyFrame = fillMissingData(companyFrame, 'date')
@@ -169,8 +204,21 @@ for company in companies:
         'totalLiabilities',
         'totalEquity'
       ])
-      # Merge external frame with company frame
-      finalFrame = pd.merge(externalGlobalFrame, companyFrame, on='date', how='inner')
+      # Merge external frame with company frame      
+      # externalGlobalFrame = externalGlobalFrame.reset_index()
+      
+      # finalFrame = pd.merge(externalGlobalFrame, companyFrame, on='date', how='inner')
+      companyFrame['date'] = pd.to_datetime(companyFrame['date'])
+      companyFrame = companyFrame.set_index('date')
+      # companyFrame.to_csv('/data/company'+symbol+'.csv')
+      finalFrame = pd.merge(companyFrame, externalGlobalFrame, on='date', how='inner')
       # Publish to redis channel instead of writing to a file
-      finalFrame.to_csv('/data/' + company['symbol'] + '.csv', index=False)
+      fileLocation = '/data/' + symbol + '.csv'
+      finalFrame.to_csv(fileLocation, index=True)
+      message = {
+        "symbol": symbol,
+        "data": fileLocation
+      }
+      publishMessageToChannel(message, redisConfig['MODEL'], redisClient, f'Publishing data for {symbol} to Data Modeller')
+      # Publish to database
       break

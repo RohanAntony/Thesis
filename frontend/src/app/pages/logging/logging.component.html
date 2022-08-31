@@ -1,12 +1,17 @@
-<table mat-table [dataSource]="sampleData">
-  <ng-container matColumnDef="time">
+<table mat-table [dataSource]="dataSource" class="table">
+  <ng-container matColumnDef="timestamp">
     <th mat-header-cell *matHeaderCellDef>Time</th>
-    <td mat-cell *matCellDef="let element">{{element.time.toISOString()}}</td>
+    <td mat-cell *matCellDef="let element">{{element.timestamp}}</td>
   </ng-container>
 
-  <ng-container matColumnDef="message">
-    <th mat-header-cell *matHeaderCellDef>Message</th>
-    <td mat-cell *matCellDef="let element">{{element.message}}</td>
+  <ng-container matColumnDef="process">
+    <th mat-header-cell *matHeaderCellDef>Process</th>
+    <td mat-cell *matCellDef="let element">{{element.process}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="log">
+    <th mat-header-cell *matHeaderCellDef>Log</th>
+    <td mat-cell *matCellDef="let element">{{element.log}}</td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

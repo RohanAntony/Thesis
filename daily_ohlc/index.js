@@ -2,11 +2,14 @@ const puppeteer = require('puppeteer');
 const Redis = require('ioredis');
 const config = require('./config.json');
 
-const logMessage = (message, publisher, file="OHLC") => {
-  publisher.publish(config.REDIS.LOGGING, `${file}:${message}`);
+const logMessage = (message, publisher) => {
+  publisher.publish(config.REDIS.LOGGING, JSON.stringify({
+    process: 'Daily OHLC Extractor',
+    log: message,
+  }));
+  console.log(message);
 }
-
-const fetchData = async (tag, type, publisher, last) => {
+const fetchData = async (tag, type, symbol, publisher, last) => {
   const browser = await puppeteer.launch({
     defaultViewport: {
       width: 1920,
@@ -31,13 +34,13 @@ const fetchData = async (tag, type, publisher, last) => {
   }
 
   const page = await browser.newPage();
-  logMessage('Launching browser and opening new page', publisher);
+  logMessage(`Launching browser and opening new page for ${symbol}`, publisher);
   const url = `https://in.investing.com/${type}/${tag}-historical-data?end_date=${end_date}&st_date=${start_date}`
   await page.goto(url, {
     waitUntil: 'networkidle2',
     timeout: 0,
   });
-  logMessage('Opening URL', publisher);
+  logMessage(`Opening URL for ${url}`, publisher);
 
   const list = await page.$$('table.common-table.js-table.medium tr.common-table-item.u-clickable');
   const dataList = [];
@@ -54,6 +57,7 @@ const fetchData = async (tag, type, publisher, last) => {
     changePercent = changePercent.replace(',', '');
     const data = {
       date,
+      symbol, 
       open: parseFloat(open.replace(',', '')),
       high: parseFloat(high.replace(',', '')),
       low: parseFloat(low.replace(',', '')),
@@ -63,10 +67,10 @@ const fetchData = async (tag, type, publisher, last) => {
     };
     dataList.push(data);
   }
-  logMessage('Extracted data from webpage', publisher);
+  logMessage(`Extracted data from webpage for ${symbol}`, publisher);
 
   await browser.close();
-  logMessage('Browser closed', publisher);
+  logMessage(`Browser closed for ${symbol}`, publisher);
 
   return dataList;
 };
@@ -79,12 +83,11 @@ const fetchData = async (tag, type, publisher, last) => {
 
   subscriber.subscribe(config.REDIS.INSTRUCTION)
   subscriber.on("message", async (channel, message) => {
-    logMessage('Receiving instructions', publisher);
     const data = JSON.parse(message);
     if (data.instruction == 'Technical') {
-      logMessage('Starting browser extraction', publisher);
-      const responseData = await fetchData(data.tag, data.type, publisher);
-      logMessage('Publishing extracted data', publisher);
+      logMessage(`Starting browser extraction for ${data.symbol}`, publisher);
+      const responseData = await fetchData(data.tag, data.type, data.symbol, publisher);
+      logMessage(`Publishing extracted data for ${data.symbol}`, publisher);
       publisher.publish(config.REDIS.DATA, JSON.stringify({
         symbol: data.symbol,
         type: config.REDIS.DOCUMENT.OHLC,

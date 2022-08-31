@@ -2,8 +2,12 @@ const puppeteer = require('puppeteer');
 const Redis = require('ioredis');
 const config = require('./config.json');
 
-const logMessage = (message, publisher, file="AIS") => {
-  publisher.publish(config.REDIS.LOGGING, `${file}:${message}`);
+const logMessage = (message, publisher) => {
+  publisher.publish(config.REDIS.LOGGING, JSON.stringify({
+    process: 'Income Statement Extractor',
+    log: message,
+  }));
+  console.log(message);
 }
 
 const fetchData = async (tickertag, symbol, name, publisher) => {
@@ -22,13 +26,13 @@ const fetchData = async (tickertag, symbol, name, publisher) => {
     ]
   });
   const page = await browser.newPage();
-  logMessage('Launching browser and opening new page', publisher);
+  logMessage(`Launching browser and opening new page for ${symbol}`, publisher);
   const url = `https://www.tickertape.in/stocks/${tickertag}/financials?checklist=basic&period=annual&statement=income&view=normal`
   await page.goto(url, {
     waitUntil: 'networkidle2',
     timeout: 0,
   });
-  logMessage('Opening URL', publisher);
+  logMessage(`Opening URL ${url}`, publisher);
 
   await page.addStyleTag({
     content: '#__next > .ttactions-root { position: inherit }'
@@ -76,7 +80,7 @@ const fetchData = async (tickertag, symbol, name, publisher) => {
       rowBasedData[rowClass.name].push(await page.evaluate(el => el.textContent, cellData))
     } 
   }
-  logMessage('Extracted data from webpage', publisher);
+  logMessage(`Extracted data from webpage for ${symbol}`, publisher);
 
   const periodData = [];
   const length = rowBasedData['period'].length;
@@ -90,10 +94,10 @@ const fetchData = async (tickertag, symbol, name, publisher) => {
     }
     periodData.push(singlePeriodData);
   }
-  logMessage('Processed data into JSON object', publisher);
+  logMessage(`Processed data into JSON object for ${symbol}`, publisher);
 
   await browser.close();
-  logMessage('Browser closed', publisher);
+  logMessage(`Browser closed for ${symbol}`, publisher);
 
   return periodData;
 };
@@ -105,12 +109,11 @@ const fetchData = async (tickertag, symbol, name, publisher) => {
   
   subscriber.subscribe(config.REDIS.INSTRUCTION)
   subscriber.on("message", async (channel, message) => {
-    logMessage('Receiving instructions', publisher);
     const data = JSON.parse(message);
     if(data.instruction == 'Fundamental') {
-      logMessage('Starting browser extraction', publisher);
+      logMessage(`Starting browser extraction for ${data.symbol}`, publisher);
       const responseData = await fetchData(data.tag, data.symbol, data.name, publisher);
-      logMessage('Publishing extracted data', publisher);
+      logMessage(`Publishing extracted data for ${data.symbol}`, publisher);
       publisher.publish(config.REDIS.DATA, JSON.stringify({
         symbol: data.symbol,
         type: config.REDIS.DOCUMENT.AIS,

@@ -6,7 +6,10 @@
     "LOGGING": "logging",
     "INSTRUCTION": "instruction",
     "DATA": "data",
+    "OHLC": "ohlc",
+    "FUNDAMENTAL": "fundamental",
     "HEARTBEAT": "heartbeat",
+    "MODEL": "model",
     "DOCUMENT": {
       "ABS": "ABS",
       "ACF": "ACF",

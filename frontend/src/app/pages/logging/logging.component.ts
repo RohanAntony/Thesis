@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { LoggingService } from 'src/app/services/logging.service';
+import { Log } from 'src/app/shared/types/Log';
+import { LogDataSource } from './logging.datasource';
 
 @Component({
   selector: 'app-logging',
@@ -7,18 +11,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoggingComponent implements OnInit {
 
-  displayedColumns = ['time', 'message'];
-  sampleData = [
-    {time: new Date(), message: 'Test'},
-    {time: new Date(), message: 'Test1'},
-    {time: new Date(), message: 'Test2'},
-    {time: new Date(), message: 'Test3'},
-    {time: new Date(), message: 'Test4'},
-  ];
+  displayedColumns = ['timestamp', 'process', 'log'];
+  // sampleData: Log[] = [
+  // ];
+  // @ViewChild(MatTable, { static: true}) table: MatTable<any> | undefined;
+  dataSource: LogDataSource;
 
-  constructor() { }
+  constructor(
+    private loggingService: LoggingService,
+  ) {
+    this.dataSource = new LogDataSource(this.loggingService);
+  }
 
   ngOnInit(): void {
+    this.dataSource = new LogDataSource(this.loggingService);
+    this.dataSource.loadLogs();
   }
 
 }
